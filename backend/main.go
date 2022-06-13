@@ -2,7 +2,10 @@ package main
 
 import (
 	"database/sql"
+	"final-project-eng2-be/api"
 	"final-project-eng2-be/db"
+	"final-project-eng2-be/repository"
+
 	_ "github.com/mattn/go-sqlite3"
 )
 
@@ -13,4 +16,7 @@ func main() {
 	}
 	database.Migrate(db)
 
+	siswaRepo := repository.NewSiswaRepository(db)
+	mainApi := api.NewApi(*siswaRepo)
+	mainApi.Start()
 }

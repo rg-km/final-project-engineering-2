@@ -20,6 +20,7 @@ func NewApi(siswaRepo repository.SiswaRepository) *API {
 	}
 
 	mux.Handle("/api/login", api.POST(http.HandlerFunc(api.login)))
+	mux.Handle("/api/register", api.POST(http.HandlerFunc(api.register)))
 
 	return api
 }
