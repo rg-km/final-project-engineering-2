@@ -7,7 +7,7 @@ import (
 )
 
 type API struct {
-	mux *http.ServeMux
+	mux       *http.ServeMux
 	siswaRepo repository.SiswaRepository
 }
 
@@ -15,7 +15,7 @@ func NewApi(siswaRepo repository.SiswaRepository) *API {
 	mux := http.NewServeMux()
 
 	api := &API{
-		mux: mux,
+		mux:       mux,
 		siswaRepo: siswaRepo,
 	}
 
@@ -25,15 +25,11 @@ func NewApi(siswaRepo repository.SiswaRepository) *API {
 	return api
 }
 
-func (api *API) Handler() *http.ServeMux{
+func (api *API) Handler() *http.ServeMux {
 	return api.mux
 }
 
-func (api *API) Start(){
+func (api *API) Start() {
 	fmt.Println("Server is running on port 8080")
 	http.ListenAndServe(":8080", api.Handler())
 }
-
-
-
-

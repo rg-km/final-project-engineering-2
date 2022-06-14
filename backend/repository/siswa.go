@@ -1,8 +1,12 @@
 package repository
 
-import "database/sql"
+import (
+	"database/sql"
+	"sync"
+)
 
 type SiswaRepository struct {
+	mu *sync.Mutex
 	db *sql.DB
 }
 
@@ -26,4 +30,24 @@ func (r *SiswaRepository) Register(nama string, password string, email string, j
 		return s, err
 	}
 	return s, nil
+}
+
+func (r *SiswaRepository) GetAll() ([]Siswa, error) {
+	var result []Siswa
+
+	sqlStatement := "SELECT * FROM siswa"
+
+	rows, err := r.db.Query(sqlStatement)
+
+	if err != nil {
+		return nil, err
+	}
+
+	for rows.Next() {
+		var s Siswa
+		rows.Scan(&s.Id, &s.Nama, &s.Password, &s.Email, &s.JenjangPendidikan, &s.Nik, &s.TanggalLahir, &s.TempatLahir)
+		result = append(result, s)
+	}
+
+	return result, nil
 }
