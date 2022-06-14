@@ -13,15 +13,6 @@ import (
 )
 
 var _ = Describe("Siswa testing", func() {
-
-	BeforeEach(func() {
-		db, err := sql.Open("sqlite3", "./beasiswa.db")
-		if err != nil {
-			panic(err)
-		}
-		database.Migrate(db)
-	})
-
 	AfterEach(func() {
 		os.Remove("./beasiswa.db")
 	})
@@ -31,6 +22,7 @@ var _ = Describe("Siswa testing", func() {
 		It("Should Return all Siswa", func() {
 			db, err := sql.Open("sqlite3", "./beasiswa.db")
 			Expect(err).To(BeNil())
+			database.Migrate(db)
 
 			w := httptest.NewRecorder()
 			r := httptest.NewRequest("GET", "/api/siswa/all", nil)
