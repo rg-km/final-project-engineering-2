@@ -23,6 +23,12 @@ type LoginSuccessResponse struct {
 	Token    string `json:"token"`
 }
 
+type RegisterSuccessResponse struct {
+	Nama string `json:"nama"`
+	Email string `json:"email"`
+	Token    string `json:"token"`
+}
+
 type AuthErrorResponse struct {
 	Error string `json:"error"`
 }
@@ -83,11 +89,32 @@ func (api *API) register(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	res, err := api.siswaRepo.Register(s.Nama, s.Password, s.Email, s.JenjangPendidikan, s.Nik, s.TempatLahir, s.TanggalLahir)
+	w.Header().Set("Content-Type", "application/json")
+	encoder := json.NewEncoder(w)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		encoder.Encode(AuthErrorResponse{Error: err.Error()})
+		return
+	}
+	expTime := time.Now().Add(60 * time.Minute)
+	claims := &Claims{
+		Email: res.Email,
+		StandardClaims: jwt.StandardClaims{
+			ExpiresAt: expTime.Unix(),
+		},
+	}
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	tokenString, err := token.SignedString(jwtKey)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(res)
+	http.SetCookie(w, &http.Cookie{
+		Name: "token",
+		Value: tokenString,
+		Expires: expTime,
+	})
+
+	json.NewEncoder(w).Encode(RegisterSuccessResponse{Nama: res.Nama, Email: res.Email, Token: tokenString})
 }
