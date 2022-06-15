@@ -1,14 +1,14 @@
-package api_test
+package api
 
 import (
 	"bytes"
 	"database/sql"
 	"encoding/json"
-	"io/ioutil"
-	"net/http/httptest"
-
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
+	"io/ioutil"
+	"net/http/httptest"
+	"os"
 
 	"final-project-eng2-be/db"
 	"final-project-eng2-be/repository"
@@ -17,6 +17,11 @@ import (
 var _ = Describe("Api testing", func() {
 	Describe("login", func() {
 		When("email and password are correct", func() {
+
+			AfterEach(func() {
+				os.Remove("./beasiswa.db")
+			})
+
 			It("should return email and token", func() {
 				db, err := sql.Open("sqlite3", "./beasiswa.db")
 				Expect(err).To(BeNil())
@@ -27,7 +32,7 @@ var _ = Describe("Api testing", func() {
 				r.Header.Set("Content-Type", "application/json")
 				siswaRepo := repository.NewSiswaRepository(db)
 				api := NewApi(*siswaRepo)
-				api.Login(w, r)
+				api.login(w, r)
 
 				res := w.Result()
 				defer res.Body.Close()
@@ -51,7 +56,7 @@ var _ = Describe("Api testing", func() {
 				r := httptest.NewRequest("POST", "/api/login", bytes.NewBuffer([]byte(`{"email":"ex@gmail.com","password":"1234567"}`)))
 				r.Header.Set("Content-Type", "application/json")
 				api := NewApi(*repository.NewSiswaRepository(db))
-				api.Login(w, r)
+				api.login(w, r)
 
 				res := w.Result()
 				defer res.Body.Close()
@@ -78,7 +83,7 @@ var _ = Describe("Api testing", func() {
 				r.Header.Set("Content-Type", "application/json")
 
 				api := NewApi(*repository.NewSiswaRepository(db))
-				api.Register(w, r)
+				api.register(w, r)
 
 				res := w.Result()
 				defer res.Body.Close()
@@ -102,9 +107,9 @@ var _ = Describe("Api testing", func() {
 				w := httptest.NewRecorder()
 				r := httptest.NewRequest("POST", "/api/register", bytes.NewBuffer([]byte(`{"nama":"ex","email":"ex@gmail.com", "password":"123456",  "jenjang_pendidikan":"S1", tempat_lahir":"Bandung", tanggal_lahir":"2020-01-01", nik":"123456789"}`)))
 				r.Header.Set("Content-Type", "application/json")
-				
+
 				api := NewApi(*repository.NewSiswaRepository(db))
-				api.Register(w, r)
+				api.register(w, r)
 
 				res := w.Result()
 				defer res.Body.Close()
@@ -120,6 +125,3 @@ var _ = Describe("Api testing", func() {
 		})
 	})
 })
-
-
-			
