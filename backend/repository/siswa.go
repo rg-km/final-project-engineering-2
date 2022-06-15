@@ -40,7 +40,7 @@ func (r *SiswaRepository) GetAll() ([]Siswa, error) {
 	rows, err := r.db.Query(sqlStatement)
 
 	if err != nil {
-		return nil, err
+		return []Siswa{}, err
 	}
 
 	for rows.Next() {
@@ -50,4 +50,18 @@ func (r *SiswaRepository) GetAll() ([]Siswa, error) {
 	}
 
 	return result, nil
+}
+func (r *SiswaRepository) GetSiswaByID(id int) (*Siswa, error) {
+	var s Siswa
+
+	sqlStatement := "SELECT * FROM siswa WHERE id = ?"
+
+	row := r.db.QueryRow(sqlStatement, id)
+	err := row.Scan(&s.Id, &s.Nama, &s.Password, &s.Email, &s.JenjangPendidikan, &s.Nik, &s.TanggalLahir, &s.TempatLahir)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &s, nil
 }
