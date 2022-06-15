@@ -1,6 +1,5 @@
 import React from "react";
-import "../../../styles/core/styles.css";
-import "./styles.css";
+import "../../../styles/css/main.css";
 
 const TextInput = ({
   label,
@@ -14,8 +13,9 @@ const TextInput = ({
   return (
     <div className="row-flex">
       <form>
+        <p className="lg-1">{label}</p>
         <input
-          className="input-base-style"
+          className="input-base-style md-4"
           name={r?.name}
           type={inputType}
           onBlur={r?.onBlur}
