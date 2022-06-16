@@ -5,11 +5,13 @@ import (
 	"encoding/json"
 	"final-project-eng2-be/db"
 	"final-project-eng2-be/repository"
-	. "github.com/onsi/ginkgo/v2"
-	. "github.com/onsi/gomega"
 	"io/ioutil"
+	"net/http"
 	"net/http/httptest"
 	"os"
+
+	. "github.com/onsi/ginkgo/v2"
+	. "github.com/onsi/gomega"
 )
 
 var _ = Describe("Siswa testing", func() {
@@ -99,7 +101,45 @@ var _ = Describe("Siswa testing", func() {
 			Expect(len(data)).To(Equal(0))
 
 		})
+		It("Shuld return siswa with the same id", func() {
+			db, err := sql.Open("sqlite3", "./beasiswa.db")
+			Expect(err).To(BeNil())
 
+			database.Migrate(db)
+
+			w := httptest.NewRecorder()
+			r := httptest.NewRequest("GET", `/api/siswa?id=1`, nil)
+			siswaRepo := repository.NewSiswaRepository(db)
+			api := NewApi(*siswaRepo)
+
+			api.GetSiswaByID(w, r)
+			result := w.Result()
+			defer result.Body.Close()
+			body, err := ioutil.ReadAll(result.Body)
+			Expect(err).To(BeNil())
+
+			var s repository.Siswa
+			err = json.Unmarshal(body, &s)
+
+			Expect(err).To(BeNil())
+			Expect(s.Id).To(Equal(int64(1)))
+
+		})
+		It("Shuld return not found", func() {
+			db, err := sql.Open("sqlite3", "./beasiswa.db")
+			Expect(err).To(BeNil())
+
+			database.Migrate(db)
+
+			w := httptest.NewRecorder()
+			r := httptest.NewRequest("GET", `/api/siswa?id=3`, nil)
+			siswaRepo := repository.NewSiswaRepository(db)
+			api := NewApi(*siswaRepo)
+
+			api.GetSiswaByID(w, r)
+			result := w.Result()
+			defer result.Body.Close()
+			Expect(result.StatusCode).To(Equal(http.StatusNotFound))
+		})
 	})
-
 })
