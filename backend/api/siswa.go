@@ -8,6 +8,8 @@ import (
 )
 
 func (a *API) GetAllSiswa(w http.ResponseWriter, r *http.Request) {
+
+	a.AllowOrigin(w, r)
 	result, err := a.siswaRepo.GetAll()
 
 	if err != nil {
@@ -31,6 +33,8 @@ func (a *API) GetAllSiswa(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *API) GetSiswaByID(w http.ResponseWriter, r *http.Request) {
+
+	a.AllowOrigin(w, r)
 	id, err := strconv.Atoi(r.URL.Query().Get("id"))
 
 	if err != nil {
