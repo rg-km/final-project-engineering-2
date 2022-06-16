@@ -59,7 +59,8 @@ func (a *API) AuthMiddleware(next http.Handler) http.Handler{
 			return
 		}
 
-		ctx := context.WithValue(r.Context(), "email", claims.Email)
+		ctx := context.WithValue(r.Context(), "email", claims.SiswaData.Email)
+		ctx = context.WithValue(r.Context(), "nama", claims.SiswaData.Nama)
 		next.ServeHTTP(w, r.WithContext(ctx))
 	})
 }
