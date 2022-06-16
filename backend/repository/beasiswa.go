@@ -29,3 +29,12 @@ func (r *BeasiswaRepository) GetAll() ([]Beasiswa, error) {
 	}
 	return beasiswa, nil
 }
+
+func (r *BeasiswaRepository) GetById(id int64) (Beasiswa, error) {
+	var b Beasiswa
+	err := r.db.QueryRow("SELECT * FROM beasiswa WHERE id = ?", id).Scan(&b.Id, &b.Nama, &b.JenisBeasiswa, &b.JenjangPendidikan, &b.TanggalMulai, &b.TanggalSelesai)
+	if err != nil {
+		return b, err
+	}
+	return b, nil
+}
