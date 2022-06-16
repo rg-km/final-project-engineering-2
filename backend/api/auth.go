@@ -74,4 +74,20 @@ func (api *API) login(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(LoginSuccessResponse{Email: res.Email, Token: tokenString})
 }
 
-	
+func (api *API) register(w http.ResponseWriter, r *http.Request) {
+	api.AllowOrigin(w, r)
+	var s Siswa
+	err := json.NewDecoder(r.Body).Decode(&s)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	res, err := api.siswaRepo.Register(s.Nama, s.Password, s.Email, s.JenjangPendidikan, s.Nik, s.TempatLahir, s.TanggalLahir)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(res)
+}
