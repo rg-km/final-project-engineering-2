@@ -1,28 +1,38 @@
 package api
 
 import (
-	"final-project-eng2-be/repository"
 	"fmt"
 	"net/http"
+
+	"final-project-eng2-be/repository"
 )
 
 type API struct {
-	mux       *http.ServeMux
-	siswaRepo repository.SiswaRepository
+	mux          *http.ServeMux
+	siswaRepo    repository.SiswaRepository
+	beasiswaRepo repository.BeasiswaRepository
+
 }
 
-func NewApi(siswaRepo repository.SiswaRepository) *API {
+func NewApi(siswaRepo repository.SiswaRepository, beasiswaRepo repository.BeasiswaRepository) *API {
 	mux := http.NewServeMux()
 
 	api := &API{
-		mux:       mux,
-		siswaRepo: siswaRepo,
+		mux:          mux,
+		siswaRepo:    siswaRepo,
+		beasiswaRepo: beasiswaRepo,
 	}
 
 	mux.Handle("/api/login", api.POST(http.HandlerFunc(api.login)))
 	mux.Handle("/api/register", api.POST(http.HandlerFunc(api.register)))
+
+	mux.Handle("/api/beasiswa", api.GET(http.HandlerFunc(api.getBeasiswa)))
+	mux.Handle("/api/beasiswa/", api.GET(http.HandlerFunc(api.getBeasiswaById)))
+
+
 	mux.Handle("/api/siswa/all", api.GET(http.HandlerFunc(api.GetAllSiswa)))
 	mux.Handle("/api/siswa", api.GET(http.HandlerFunc(api.GetSiswaByID)))
+
 	return api
 }
 
