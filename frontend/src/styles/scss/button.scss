@@ -1,0 +1,24 @@
+$primary-color: #1c2560;
+$primary-color-200: #A4A8BF;
+$text-color: #f7f8f9;
+
+.button {
+  padding: 16px 24px;
+  background-color: $primary-color;
+  color: $text-color;
+  border-radius: 16px;
+  border: none;
+
+  &:hover {
+    background-color: $primary-color-200;
+  }
+}
+
+
+.text {
+  color: $primary-color;
+
+  &:hover {
+    color: $primary-color-200;
+  }
+}

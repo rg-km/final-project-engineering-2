@@ -19,6 +19,7 @@ const Form = ({ forms = [], register, control, errors }) => {
         register={register}
         control={control}
         errors={errors}
+        inputType={form.inputType}
         {...form}
       />
     );

@@ -1,10 +1,13 @@
 import Login from "./screen/authentication/login";
+import { BrowserRouter as Router } from "react-router-dom";
 
 const App = () => {
   return (
-    <div className="App">
-      <Login />
-    </div>
+    <Router>
+      <div className="App">
+        <Login />
+      </div>
+    </Router>
   );
 };
 

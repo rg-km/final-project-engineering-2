@@ -1,33 +1,14 @@
-import { useForm } from "react-hook-form";
-import Form from "../../../components/data-entry/Form";
+import "../../../styles/css/main.css";
+import LoginForm from "./LoginForm";
 
 const Login = () => {
-  const {
-    register,
-    control,
-    formState: { errors },
-    handleSubmit,
-  } = useForm();
-
   return (
-    <Form
-      forms={[
-        {
-          label: "Email",
-          name: "email",
-          placeholder: "Enter your email",
-          type: "text-input",
-        },
-        {
-          label: "Password",
-          name: "password",
-          placeholder: "Enter your password",
-          type: "text-input",
-        },
-      ]}
-      control={control}
-      register={register}
-    />
+    <div className="row-flex container">
+      <div className="img-left" />
+      <div className="column-flex content-container spacing-form-right">
+        <LoginForm />
+      </div>
+    </div>
   );
 };
 
