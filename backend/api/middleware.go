@@ -1,14 +1,14 @@
 package api
 
 import (
-	"net/http"
 	"context"
 	"encoding/json"
 	"github.com/dgrijalva/jwt-go"
+	"net/http"
 )
 
 func (a *API) AllowOrigin(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Access-Control-Allow-Origin", "htttp://localhost:9000")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Allow-Headers", "*")
 	w.Header().Set("Access-Control-Allow-Methods", "GET,POST")
 	w.Header().Set("Access-Control-Allow-Credentials", "true")
@@ -19,8 +19,8 @@ func (a *API) AllowOrigin(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (a *API) AuthMiddleware(next http.Handler) http.Handler{
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request){
+func (a *API) AuthMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		a.AllowOrigin(w, r)
 		encoder := json.NewEncoder(w)
 
@@ -91,3 +91,4 @@ func (api *API) POST(next http.Handler) http.Handler {
 		next.ServeHTTP(w, r)
 	})
 }
+

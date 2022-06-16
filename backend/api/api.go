@@ -11,6 +11,7 @@ type API struct {
 	mux          *http.ServeMux
 	siswaRepo    repository.SiswaRepository
 	beasiswaRepo repository.BeasiswaRepository
+
 }
 
 func NewApi(siswaRepo repository.SiswaRepository, beasiswaRepo repository.BeasiswaRepository) *API {
@@ -27,6 +28,10 @@ func NewApi(siswaRepo repository.SiswaRepository, beasiswaRepo repository.Beasis
 
 	mux.Handle("/api/beasiswa", api.GET(http.HandlerFunc(api.getBeasiswa)))
 	mux.Handle("/api/beasiswa/", api.GET(http.HandlerFunc(api.getBeasiswaById)))
+
+
+	mux.Handle("/api/siswa/all", api.GET(http.HandlerFunc(api.GetAllSiswa)))
+	mux.Handle("/api/siswa", api.GET(http.HandlerFunc(api.GetSiswaByID)))
 
 	return api
 }
