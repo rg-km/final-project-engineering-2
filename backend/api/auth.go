@@ -36,7 +36,8 @@ type AuthErrorResponse struct {
 var jwtKey = []byte("key")
 
 type Claims struct {
-	Email string `json:"email"`
+	//Email string `json:"email"`
+	SiswaData Siswa `json:"siswa_data"`
 	jwt.StandardClaims
 }
 
@@ -59,7 +60,15 @@ func (api *API) login(w http.ResponseWriter, r *http.Request) {
 	}
 	expTime := time.Now().Add(60 * time.Minute)
 	claims := &Claims{
-		Email: res.Email,
+		//Email: res.Email,
+		SiswaData: Siswa{
+			Email: res.Email,
+			Nama: res.Nama,
+			JenjangPendidikan: res.JenjangPendidikan,
+			Nik: res.Nik,
+			TempatLahir: res.TempatLahir,
+			TanggalLahir: res.TanggalLahir,
+		},
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: expTime.Unix(),
 		},
@@ -98,7 +107,15 @@ func (api *API) register(w http.ResponseWriter, r *http.Request) {
 	}
 	expTime := time.Now().Add(60 * time.Minute)
 	claims := &Claims{
-		Email: res.Email,
+		//Email: res.Email,
+		SiswaData: Siswa{
+			Email: res.Email,
+			Nama: res.Nama,
+			JenjangPendidikan: res.JenjangPendidikan,
+			Nik: res.Nik,
+			TempatLahir: res.TempatLahir,
+			TanggalLahir: res.TanggalLahir,
+		},
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: expTime.Unix(),
 		},
