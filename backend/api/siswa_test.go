@@ -28,8 +28,9 @@ var _ = Describe("Siswa testing", func() {
 
 			w := httptest.NewRecorder()
 			r := httptest.NewRequest("GET", "/api/siswa/all", nil)
+			beasiswaRepo := repository.NewBeasiswaRepository(db)
 			siswaRepo := repository.NewSiswaRepository(db)
-			api := NewApi(*siswaRepo)
+			api := NewApi(*siswaRepo, *beasiswaRepo)
 			api.GetAllSiswa(w, r)
 
 			res := w.Result()
@@ -84,8 +85,9 @@ var _ = Describe("Siswa testing", func() {
 					legalitas TEXT);`)
 			w := httptest.NewRecorder()
 			r := httptest.NewRequest("GET", "/api/siswa/all", nil)
+			beasiswaRepo := repository.NewBeasiswaRepository(db)
 			siswaRepo := repository.NewSiswaRepository(db)
-			api := NewApi(*siswaRepo)
+			api := NewApi(*siswaRepo, *beasiswaRepo)
 			api.GetAllSiswa(w, r)
 
 			res := w.Result()
@@ -110,7 +112,8 @@ var _ = Describe("Siswa testing", func() {
 			w := httptest.NewRecorder()
 			r := httptest.NewRequest("GET", `/api/siswa?id=1`, nil)
 			siswaRepo := repository.NewSiswaRepository(db)
-			api := NewApi(*siswaRepo)
+			beasiswaRepo := repository.NewBeasiswaRepository(db)
+			api := NewApi(*siswaRepo, *beasiswaRepo)
 
 			api.GetSiswaByID(w, r)
 			result := w.Result()
@@ -134,7 +137,8 @@ var _ = Describe("Siswa testing", func() {
 			w := httptest.NewRecorder()
 			r := httptest.NewRequest("GET", `/api/siswa?id=3`, nil)
 			siswaRepo := repository.NewSiswaRepository(db)
-			api := NewApi(*siswaRepo)
+			beasiswaRepo := repository.NewBeasiswaRepository(db)
+			api := NewApi(*siswaRepo, *beasiswaRepo)
 
 			api.GetSiswaByID(w, r)
 			result := w.Result()

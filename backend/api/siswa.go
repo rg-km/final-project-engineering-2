@@ -3,10 +3,72 @@ package api
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/golang-jwt/jwt/v4"
 	"net/http"
 	"strconv"
+	"time"
 )
 
+func (a *API) GetSiswaByToken(w http.ResponseWriter, r *http.Request) {
+	a.AllowOrigin(w, r)
+	w.Header().Set("Content-Type", "application/json")
+	c, err := r.Cookie("token")
+	encoder := json.NewEncoder(w)
+	if err != nil {
+		if err == http.ErrNoCookie {
+			w.WriteHeader(http.StatusUnauthorized)
+			encoder.Encode(AuthErrorResponse{Error: err.Error()})
+			return
+		}
+		w.WriteHeader(http.StatusBadRequest)
+		encoder.Encode(AuthErrorResponse{Error: err.Error()})
+		return
+	}
+
+	tokenStr := c.Value
+	SiswaClaims := &Claims{}
+
+	token, err := jwt.ParseWithClaims(tokenStr, SiswaClaims, func(token *jwt.Token) (interface{}, error) {
+		return jwtKey, nil
+	})
+
+	if err != nil {
+		if err == jwt.ErrSignatureInvalid {
+			w.WriteHeader(http.StatusUnauthorized)
+			encoder.Encode(AuthErrorResponse{Error: err.Error()})
+			return
+		}
+		w.WriteHeader(http.StatusBadRequest)
+		encoder.Encode(AuthErrorResponse{Error: err.Error()})
+		return
+	}
+
+	if !token.Valid {
+		w.WriteHeader(http.StatusUnauthorized)
+		encoder.Encode(AuthErrorResponse{Error: "Invalid Token"})
+		return
+	}
+
+	retrivedSiswa := SiswaClaims.SiswaData
+
+	expTime := time.Now().Add(60 * time.Minute)
+	newTokenString, err := a.GenerateSiswaToken(retrivedSiswa, expTime)
+
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	http.SetCookie(w, &http.Cookie{
+		Name:    "token",
+		Value:   newTokenString,
+		Expires: expTime,
+	})
+
+	w.WriteHeader(http.StatusOK)
+	encoder.Encode(retrivedSiswa)
+	return
+}
 func (a *API) GetAllSiswa(w http.ResponseWriter, r *http.Request) {
 
 	a.AllowOrigin(w, r)

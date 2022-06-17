@@ -31,7 +31,8 @@ var _ = Describe("Api testing", func() {
 				r := httptest.NewRequest("POST", "/api/login", bytes.NewBuffer([]byte(`{"email":"ex@gmail.com","password":"123456"}`)))
 				r.Header.Set("Content-Type", "application/json")
 				siswaRepo := repository.NewSiswaRepository(db)
-				api := NewApi(*siswaRepo)
+				beasiswaRepo := repository.NewBeasiswaRepository(db)
+				api := NewApi(*siswaRepo, *beasiswaRepo)
 				api.login(w, r)
 
 				res := w.Result()
@@ -55,7 +56,8 @@ var _ = Describe("Api testing", func() {
 				w := httptest.NewRecorder()
 				r := httptest.NewRequest("POST", "/api/login", bytes.NewBuffer([]byte(`{"email":"ex@gmail.com","password":"1234567"}`)))
 				r.Header.Set("Content-Type", "application/json")
-				api := NewApi(*repository.NewSiswaRepository(db))
+				beasiswaRepo := repository.NewBeasiswaRepository(db)
+				api := NewApi(*repository.NewSiswaRepository(db), *beasiswaRepo)
 				api.login(w, r)
 
 				res := w.Result()
@@ -82,7 +84,8 @@ var _ = Describe("Api testing", func() {
 				r := httptest.NewRequest("POST", "/api/register", bytes.NewBuffer([]byte(`{"nama":"ex","email":"ex@gmail.com", "password":"123456", "jenjang_pendidikan":"S1", tempat_lahir":"Bandung", tanggal_lahir":"2020-01-01", nik":"123456789"}`)))
 				r.Header.Set("Content-Type", "application/json")
 
-				api := NewApi(*repository.NewSiswaRepository(db))
+				beasiswaRepo := repository.NewBeasiswaRepository(db)
+				api := NewApi(*repository.NewSiswaRepository(db), *beasiswaRepo)
 				api.register(w, r)
 
 				res := w.Result()
@@ -108,7 +111,8 @@ var _ = Describe("Api testing", func() {
 				r := httptest.NewRequest("POST", "/api/register", bytes.NewBuffer([]byte(`{"nama":"ex","email":"ex@gmail.com", "password":"123456",  "jenjang_pendidikan":"S1", tempat_lahir":"Bandung", tanggal_lahir":"2020-01-01", nik":"123456789"}`)))
 				r.Header.Set("Content-Type", "application/json")
 
-				api := NewApi(*repository.NewSiswaRepository(db))
+				beasiswaRepo := repository.NewBeasiswaRepository(db)
+				api := NewApi(*repository.NewSiswaRepository(db), *beasiswaRepo)
 				api.register(w, r)
 
 				res := w.Result()
