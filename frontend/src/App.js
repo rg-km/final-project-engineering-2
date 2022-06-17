@@ -1,13 +1,15 @@
+import { Route, Routes } from "react-router-dom";
 import Login from "./screen/authentication/login";
-import { BrowserRouter as Router } from "react-router-dom";
+import Register from "./screen/authentication/Register";
 
 const App = () => {
   return (
-    <Router>
-      <div className="App">
-        <Login />
-      </div>
-    </Router>
+    <div className="App">
+      <Routes>
+        <Route path="/login" component={<Login />} />
+        <Route path="/register" component={<Register />} />
+      </Routes>
+    </div>
   );
 };
 
