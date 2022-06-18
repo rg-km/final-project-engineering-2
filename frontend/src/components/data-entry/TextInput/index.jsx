@@ -21,7 +21,7 @@ const TextInput = ({
           onBlur={r?.onBlur}
           onChange={r?.onChange}
           value={r?.value}
-          ref={r?.ref}
+          // ref={r?.ref}
           placeholder={placeholder}
         />
         <p className="md-4 error-text">{Boolean(errorText) && errorText}</p>
