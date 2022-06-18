@@ -19,7 +19,7 @@ const RegisterForm = () => {
 
   return (
     <div className="column-flex container">
-      <h3 className="xl-4">Login</h3>
+      <h3 className="xl-4">Register</h3>
       <form>
         <Form
           forms={[
