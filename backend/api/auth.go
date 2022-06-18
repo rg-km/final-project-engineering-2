@@ -94,21 +94,22 @@ func (api *API) login(w http.ResponseWriter, r *http.Request) {
 		Value:   tokenString,
 		Expires: expTime,
 	})
-
+	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(LoginSuccessResponse{Email: res.Email, Token: tokenString})
 }
 
 func (api *API) register(w http.ResponseWriter, r *http.Request) {
 	api.AllowOrigin(w, r)
+	encoder := json.NewEncoder(w)
 	var s Siswa
 	err := json.NewDecoder(r.Body).Decode(&s)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
+		encoder.Encode(AuthErrorResponse{Error: "Failed to register"})
 		return
 	}
 	res, err := api.siswaRepo.Register(s.Nama, s.Password, s.Email, s.JenjangPendidikan, s.Nik, s.TempatLahir, s.TanggalLahir)
 	w.Header().Set("Content-Type", "application/json")
-	encoder := json.NewEncoder(w)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		encoder.Encode(AuthErrorResponse{Error: err.Error()})
