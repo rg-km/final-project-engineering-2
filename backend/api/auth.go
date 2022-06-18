@@ -2,25 +2,32 @@ package api
 
 import (
 	"encoding/json"
+	"errors"
+	"fmt"
 	"net/http"
 	"time"
 
+	"github.com/go-playground/validator/v10"
 	"github.com/golang-jwt/jwt/v4"
 )
 
 type Siswa struct {
-	Email             string `json:"email"`
-	Password          string `json:"password"`
-	Nama              string `json:"nama"`
-	JenjangPendidikan string `json:"jenjang_pendidikan"`
-	Nik               string `json:"nik"`
-	TempatLahir       string `json:"tempat_lahir"`
-	TanggalLahir      string `json:"tanggal_lahir"`
+	Email             string `json:"email" validate:"required,email"`
+	Password          string `json:"password" validate:"required"`
+	Nama              string `json:"nama" validate:"required"`
+	JenjangPendidikan string `json:"jenjang_pendidikan" validate:"required"`
+	Nik               string `json:"nik" validate:"required"`
+	TempatLahir       string `json:"tempat_lahir" validate:"required"`
+	TanggalLahir      string `json:"tanggal_lahir" validate:"required"`
 }
 
 type LoginSuccessResponse struct {
 	Email string `json:"email"`
 	Token string `json:"token"`
+}
+type LoginSiswa struct {
+	Email    string `json:"email" validate:"required,email"`
+	Password string `json:"password" validate:"required"`
 }
 
 type RegisterSuccessResponse struct {
@@ -32,13 +39,40 @@ type RegisterSuccessResponse struct {
 type AuthErrorResponse struct {
 	Error string `json:"error"`
 }
+type ValidationErrorResponse struct {
+	Error []string `json:"error"`
+}
 
 var jwtKey = []byte("key")
 
 type Claims struct {
-	//Email string `json:"email"`
+	// Email string `json:"email"`
 	SiswaData Siswa `json:"siswa_data"`
 	jwt.StandardClaims
+}
+
+func formatValidationError(err error) []string {
+	var ve validator.ValidationErrors
+	out := []string{}
+	var msg string
+
+	if errors.As(err, &ve) {
+		out = make([]string, len(ve))
+		for i, fe := range ve {
+			tag := fe.Tag()
+			field := fe.Field()
+
+			switch tag {
+			case "required":
+				msg = fmt.Sprintf("%s is required", field)
+			case "email":
+				msg = fmt.Sprintf("%s is not a valid email", field)
+			}
+			out[i] = msg
+
+		}
+	}
+	return out
 }
 
 func (api *API) GenerateSiswaToken(siswa Siswa, expTime time.Time) (string, error) {
@@ -50,22 +84,35 @@ func (api *API) GenerateSiswaToken(siswa Siswa, expTime time.Time) (string, erro
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	tokenString, err := token.SignedString(jwtKey)
-
 	if err != nil {
 		return "", err
 	}
 
 	return tokenString, nil
 }
+
 func (api *API) login(w http.ResponseWriter, r *http.Request) {
 	api.AllowOrigin(w, r)
-	var s Siswa
-	err := json.NewDecoder(r.Body).Decode(&s)
+	// var s Siswa
+	var ls LoginSiswa
+
+	err := json.NewDecoder(r.Body).Decode(&ls)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	res, err := api.siswaRepo.Login(s.Email, s.Password)
+
+	err = validator.New().Struct(ls)
+	if err != nil {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusUnprocessableEntity)
+
+		errors := formatValidationError(err)
+		json.NewEncoder(w).Encode(ValidationErrorResponse{Error: errors})
+		return
+	}
+
+	res, err := api.siswaRepo.Login(ls.Email, ls.Password)
 
 	w.Header().Set("Content-Type", "application/json")
 	encoder := json.NewEncoder(w)
@@ -106,6 +153,17 @@ func (api *API) register(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
+
+	err = validator.New().Struct(s)
+	if err != nil {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusUnprocessableEntity)
+
+		errors := formatValidationError(err)
+		json.NewEncoder(w).Encode(ValidationErrorResponse{Error: errors})
+		return
+	}
+
 	res, err := api.siswaRepo.Register(s.Nama, s.Password, s.Email, s.JenjangPendidikan, s.Nik, s.TempatLahir, s.TanggalLahir)
 	w.Header().Set("Content-Type", "application/json")
 	encoder := json.NewEncoder(w)
@@ -116,7 +174,7 @@ func (api *API) register(w http.ResponseWriter, r *http.Request) {
 	}
 	expTime := time.Now().Add(60 * time.Minute)
 	claims := &Claims{
-		//Email: res.Email,
+		// Email: res.Email,
 		SiswaData: Siswa{
 			Email:             res.Email,
 			Nama:              res.Nama,
