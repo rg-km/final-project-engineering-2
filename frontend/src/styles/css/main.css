@@ -51,12 +51,31 @@
   color: #A4A8BF;
 }
 
+.button {
+  padding: 16px 24px;
+  background-color: #1c2560;
+  color: #f7f8f9;
+  border-radius: 16px;
+  border: none;
+}
+.button:hover {
+  background-color: #A4A8BF;
+}
+
+.text {
+  color: #1c2560;
+}
+.text:hover {
+  color: #A4A8BF;
+}
+
 .input-base-style {
   font-weight: 400;
   font-size: 16px;
   border-radius: 8px;
   padding: 16px 8px;
   width: 500px;
+  border: 1px solid #1c2560;
 }
 
 .spacing {
@@ -66,6 +85,37 @@
 .error-text {
   color: #f44336;
   margin-top: 4px;
+}
+
+.button {
+  padding: 16px 24px;
+  background-color: #1c2560;
+  color: #f7f8f9;
+  border-radius: 16px;
+  border: none;
+}
+.button:hover {
+  background-color: #A4A8BF;
+}
+
+.text {
+  color: #1c2560;
+}
+.text:hover {
+  color: #A4A8BF;
+}
+
+.header-container {
+  height: 100%;
+  width: 100%;
+}
+
+.header-content-container {
+  align-items: center;
+}
+
+.title {
+  color: #1c2560;
 }
 
 .button {
