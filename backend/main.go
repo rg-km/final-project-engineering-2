@@ -19,7 +19,8 @@ func main() {
 
 	siswaRepo := repository.NewSiswaRepository(db)
 	beasiswaRepo := repository.NewBeasiswaRepository(db)
+	pendaftaranRepo := repository.NewPendaftaranRepository(db)
 
-	mainApi := api.NewApi(*siswaRepo, *beasiswaRepo)
+	mainApi := api.NewApi(*siswaRepo, *beasiswaRepo, *pendaftaranRepo)
 	mainApi.Start()
 }

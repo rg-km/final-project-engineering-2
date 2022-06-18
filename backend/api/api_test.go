@@ -32,7 +32,8 @@ var _ = Describe("Api testing", func() {
 				r.Header.Set("Content-Type", "application/json")
 				siswaRepo := repository.NewSiswaRepository(db)
 				beasiswaRepo := repository.NewBeasiswaRepository(db)
-				api := NewApi(*siswaRepo, *beasiswaRepo)
+				pendaftarnRepo := repository.NewPendaftaranRepository(db)
+				api := NewApi(*siswaRepo, *beasiswaRepo, *pendaftarnRepo)
 				api.login(w, r)
 
 				res := w.Result()
@@ -57,7 +58,7 @@ var _ = Describe("Api testing", func() {
 				r := httptest.NewRequest("POST", "/api/login", bytes.NewBuffer([]byte(`{"email":"ex@gmail.com","password":"1234567"}`)))
 				r.Header.Set("Content-Type", "application/json")
 				beasiswaRepo := repository.NewBeasiswaRepository(db)
-				api := NewApi(*repository.NewSiswaRepository(db), *beasiswaRepo)
+				api := NewApi(*repository.NewSiswaRepository(db), *beasiswaRepo, *repository.NewPendaftaranRepository(db))
 				api.login(w, r)
 
 				res := w.Result()
@@ -85,7 +86,7 @@ var _ = Describe("Api testing", func() {
 				r.Header.Set("Content-Type", "application/json")
 
 				beasiswaRepo := repository.NewBeasiswaRepository(db)
-				api := NewApi(*repository.NewSiswaRepository(db), *beasiswaRepo)
+				api := NewApi(*repository.NewSiswaRepository(db), *beasiswaRepo, *repository.NewPendaftaranRepository(db))
 				api.register(w, r)
 
 				res := w.Result()
@@ -112,7 +113,7 @@ var _ = Describe("Api testing", func() {
 				r.Header.Set("Content-Type", "application/json")
 
 				beasiswaRepo := repository.NewBeasiswaRepository(db)
-				api := NewApi(*repository.NewSiswaRepository(db), *beasiswaRepo)
+				api := NewApi(*repository.NewSiswaRepository(db), *beasiswaRepo, *repository.NewPendaftaranRepository(db))
 				api.register(w, r)
 
 				res := w.Result()

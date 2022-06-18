@@ -8,18 +8,20 @@ import (
 )
 
 type API struct {
-	mux          *http.ServeMux
-	siswaRepo    repository.SiswaRepository
-	beasiswaRepo repository.BeasiswaRepository
+	mux             *http.ServeMux
+	siswaRepo       repository.SiswaRepository
+	beasiswaRepo    repository.BeasiswaRepository
+	pendaftaranRepo repository.PendaftaranRepository
 }
 
-func NewApi(siswaRepo repository.SiswaRepository, beasiswaRepo repository.BeasiswaRepository) *API {
+func NewApi(siswaRepo repository.SiswaRepository, beasiswaRepo repository.BeasiswaRepository, pendaftaranRepo repository.PendaftaranRepository) *API {
 	mux := http.NewServeMux()
 
 	api := &API{
-		mux:          mux,
-		siswaRepo:    siswaRepo,
-		beasiswaRepo: beasiswaRepo,
+		mux:             mux,
+		siswaRepo:       siswaRepo,
+		beasiswaRepo:    beasiswaRepo,
+		pendaftaranRepo: pendaftaranRepo,
 	}
 
 	mux.Handle("/api/login", api.POST(http.HandlerFunc(api.login)))
@@ -31,6 +33,13 @@ func NewApi(siswaRepo repository.SiswaRepository, beasiswaRepo repository.Beasis
 	mux.Handle("/api/siswa/all", api.GET(http.HandlerFunc(api.GetAllSiswa)))
 	mux.Handle("/api/siswa", api.GET(http.HandlerFunc(api.GetSiswaByID)))
 	mux.Handle("/api/siswa/token", api.GET(http.HandlerFunc(api.GetSiswaByToken)))
+
+	mux.Handle("/api/pendaftaran/all", api.GET(http.HandlerFunc(api.getAllPendaftaran)))
+	mux.Handle("/api/pendaftaran", api.GET(http.HandlerFunc(api.getPendaftaranById)))
+	mux.Handle("/api/pendaftaran/siswa", api.GET(http.HandlerFunc(api.getPendaftaranBySiswa)))
+	mux.Handle("/api/pendaftaran/beasiswa", api.GET(http.HandlerFunc(api.getPendaftaranByBeasiswa)))
+
+	mux.Handle("/api/pendaftaran", api.POST(http.HandlerFunc(api.createPendaftaran)))
 
 	return api
 }
