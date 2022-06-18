@@ -3,31 +3,44 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import ENV from "../../../../.env";
 import Form from "../../../../components/data-entry/Form";
+import AlertModal from "../../../../components/AlertModal";
 import useAuth from "../../../../hooks/useAuth";
 import "../../../../styles/css/main.css";
+import { useState } from "react";
+import { Spinner } from "@chakra-ui/react";
 
 const LoginForm = () => {
   const navigate = useNavigate();
+  const [error, setError] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const {
     register,
     control,
     formState: { errors },
     handleSubmit,
-  } = useForm();
+  } = useForm({});
 
   const setAuthToken = useAuth((state) => state.setAuthToken);
-  const authToken = useAuth((state) => state.authToken);
 
-  const submit = async (value) => {
+  const submit = (value) => {
+    setLoading(true);
     axios({
       method: "post",
       url: `${ENV.API_URL}/api/login`,
-      data: { value },
-      withCredentials: true,
+      data: value,
+      mode: "cors",
+      credentials: "include",
     })
-      .then((res) => console.log(res))
-      .catch((err) => console.log(err));
+      .then((res) => {
+        setError(false);
+        setAuthToken(res.data.token);
+        navigate("/");
+      })
+      .catch((err) => {
+        if (err) setError(true);
+      });
+    setLoading(false);
   };
 
   const navigateToRegister = () => navigate("/register");
@@ -55,6 +68,9 @@ const LoginForm = () => {
           register={register}
           errors={errors}
         />
+        {error && (
+          <AlertModal title="Error Login" errorMsg="Email or Password Wrong" />
+        )}
         <div className="column-flex container">
           <div className="row-flex spacing-text-button">
             <p className="md-4">Belum punya akun? </p>
@@ -63,7 +79,7 @@ const LoginForm = () => {
             </p>
           </div>
           <button className="button" onClick={handleSubmit(submit)}>
-            Submit
+            {loading ? <Spinner /> : "Submit"}
           </button>
         </div>
       </form>

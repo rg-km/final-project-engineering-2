@@ -1,8 +1,11 @@
 import create from "zustand";
 
 const useAuth = create((set) => ({
-  authToken: "",
-  setAuthToken: (authToken) => set(() => ({ authToken: authToken })),
+  setAuthToken: (authToken) => set(() => ({ authToken: saveToken(authToken) })),
 }));
+
+const saveToken = (token = "") => {
+  localStorage.setItem("token", token);
+};
 
 export default useAuth;
