@@ -1,0 +1,14 @@
+@import "../../styles/scss/button.scss";
+
+.header-container {
+  height: 100%;
+  width: 100%;
+}
+
+.header-content-container {
+  align-items: center;
+}
+
+.title {
+  color: $primary-color;
+}

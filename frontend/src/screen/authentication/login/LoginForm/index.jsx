@@ -1,5 +1,7 @@
+import axios from "axios";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
+import ENV from "../../../../.env";
 import Form from "../../../../components/data-entry/Form";
 import useAuth from "../../../../hooks/useAuth";
 import "../../../../styles/css/main.css";
@@ -18,8 +20,14 @@ const LoginForm = () => {
   const authToken = useAuth((state) => state.authToken);
 
   const submit = async (value) => {
-    await setAuthToken(value.email);
-    console.log(authToken);
+    axios({
+      method: "post",
+      url: `${ENV.API_URL}/api/login`,
+      data: { value },
+      withCredentials: true,
+    })
+      .then((res) => console.log(res))
+      .catch((err) => console.log(err));
   };
 
   const navigateToRegister = () => navigate("/register");
