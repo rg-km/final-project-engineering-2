@@ -9,6 +9,10 @@ import (
 	"time"
 )
 
+type SiswaErrorResponse struct {
+	Error string `json:"error"`
+}
+
 func (a *API) GetSiswaByToken(w http.ResponseWriter, r *http.Request) {
 	a.AllowOrigin(w, r)
 	w.Header().Set("Content-Type", "application/json")
@@ -74,10 +78,10 @@ func (a *API) GetAllSiswa(w http.ResponseWriter, r *http.Request) {
 
 	a.AllowOrigin(w, r)
 	result, err := a.siswaRepo.GetAll()
-
+	encoder := json.NewEncoder(w)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte("error : Internal server error"))
+		encoder.Encode(SiswaErrorResponse{Error: "Internal server error"})
 		return
 	}
 
@@ -85,7 +89,7 @@ func (a *API) GetAllSiswa(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte("error : Internal server error"))
+		encoder.Encode(SiswaErrorResponse{Error: "Internal server error"})
 		return
 	}
 
@@ -99,11 +103,11 @@ func (a *API) GetSiswaByID(w http.ResponseWriter, r *http.Request) {
 
 	a.AllowOrigin(w, r)
 	id, err := strconv.Atoi(r.URL.Query().Get("id"))
-
+	encoder := json.NewEncoder(w)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Header().Set("Content-Type", "application/json")
-		w.Write([]byte("error : Internal server error"))
+		encoder.Encode(SiswaErrorResponse{Error: "Internal server error"})
 		return
 	}
 
@@ -112,21 +116,10 @@ func (a *API) GetSiswaByID(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		w.WriteHeader(http.StatusNotFound)
 		w.Header().Set("Content-Type", "application/json")
-		w.Write([]byte(fmt.Sprintf("error : No siswa with id = %d", id)))
+		encoder.Encode(SiswaErrorResponse{Error: fmt.Sprintf("No siswa with id = %d", id)})
 		return
 	}
-
-	data, err := json.Marshal(res)
-
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		w.Header().Set("Content-Type", "application/json")
-		w.Write([]byte("error : Internal server error"))
-		return
-	}
-
 	w.WriteHeader(http.StatusOK)
-	w.Header().Set("Content-Type", "application/json")
-	w.Write(data)
+	encoder.Encode(res)
 	return
 }
