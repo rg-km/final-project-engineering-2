@@ -1,11 +1,11 @@
 import create from "zustand";
-// import { devtools } from "zustand/middleware";
 
 const useAuth = create((set) => ({
-  authToken: "",
-  setAuthToken: (authToken) => set(() => ({ authToken: authToken })),
+  setAuthToken: (authToken) => set(() => ({ authToken: saveToken(authToken) })),
 }));
 
-// const useAuth = create(devtools(auth));
+const saveToken = (token = "") => {
+  localStorage.setItem("token", token);
+};
 
 export default useAuth;

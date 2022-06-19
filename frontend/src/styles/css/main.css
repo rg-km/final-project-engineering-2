@@ -105,6 +105,37 @@
   color: #A4A8BF;
 }
 
+.header-container {
+  height: 100%;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px;
+  box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+}
+
+.title {
+  color: #1c2560;
+}
+
+.button {
+  padding: 16px 24px;
+  background-color: #1c2560;
+  color: #f7f8f9;
+  border-radius: 16px;
+  border: none;
+}
+.button:hover {
+  background-color: #A4A8BF;
+}
+
+.text {
+  color: #1c2560;
+}
+.text:hover {
+  color: #A4A8BF;
+}
+
 .img-left {
   background: url("https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1973&q=80");
   background-repeat: no-repeat;

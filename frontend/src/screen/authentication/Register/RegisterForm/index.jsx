@@ -1,10 +1,16 @@
+import { Spinner, useToast } from "@chakra-ui/react";
+import axios from "axios";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
+import ENV from "../../../../.env";
 import Form from "../../../../components/data-entry/Form";
 import "../../../../styles/css/main.css";
 
 const RegisterForm = () => {
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+  const toast = useToast();
 
   const {
     register,
@@ -13,7 +19,38 @@ const RegisterForm = () => {
     handleSubmit,
   } = useForm();
 
-  const submit = async (value) => {};
+  const submit = (value) => {
+    setLoading(true);
+    axios({
+      method: "post",
+      url: `${ENV.API_URL}/api/register`,
+      data: value,
+      mode: "cors",
+      credentials: "include",
+    })
+      .then((res) => {
+        toast({
+          title: "Register Success.",
+          description: "Redirect to Login Page.",
+          status: "success",
+          duration: 9000,
+          isClosable: true,
+        });
+        if (res) {
+          navigate("/login");
+        }
+      })
+      .catch((err) => {
+        if (err)
+          toast({
+            title: "Error Register.",
+            description: "There is data incorrect.",
+            status: "error",
+            duration: 9000,
+            isClosable: true,
+          });
+      });
+  };
 
   const navigateToLogin = () => navigate("/login");
 
@@ -30,8 +67,8 @@ const RegisterForm = () => {
               type: "text-input",
             },
             {
-              label: "Full name",
-              name: "fullName",
+              label: "Name",
+              name: "nama",
               placeholder: "Enter your Full Name",
             },
             {
@@ -41,10 +78,24 @@ const RegisterForm = () => {
               inputType: "password",
             },
             {
-              label: "Confirm Password",
-              name: "confirmpassword",
-              placeholder: "Enter your password",
-              inputType: "password",
+              label: "Education",
+              name: "jenjang_pendidikan",
+              placeholder: "Enter your Education Level",
+            },
+            {
+              label: "NIK",
+              name: "nik",
+              placeholder: "Enter your NIK",
+            },
+            {
+              label: "City",
+              name: "tempat_lahir",
+              placeholder: "Enter your City of Birth",
+            },
+            {
+              label: "Date of Birth",
+              name: "tanggal_lahir",
+              placeholder: "YYYY-MM-DD",
             },
           ]}
           control={control}
@@ -59,7 +110,7 @@ const RegisterForm = () => {
             </p>
           </div>
           <button className="button" onClick={handleSubmit(submit)}>
-            Submit
+            {loading ? <Spinner /> : "Submit"}
           </button>
         </div>
       </form>

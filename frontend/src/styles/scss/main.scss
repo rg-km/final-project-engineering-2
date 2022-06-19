@@ -1,9 +1,10 @@
-@import './typography.scss';
-@import './flex.scss';
-@import './button.scss';
+@import "./typography.scss";
+@import "./flex.scss";
+@import "./button.scss";
 
 //Component
-@import '../../components/data-entry/TextInput/text-input.scss';
+@import "../../components/data-entry/TextInput/text-input.scss";
+@import "../../components/Header/header.scss";
 
 //Screen
-@import '../../screen/authentication/login/styles.scss'
+@import "../../screen/authentication/login/styles.scss";
