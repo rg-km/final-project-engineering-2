@@ -5,6 +5,17 @@ import (
 	"sync"
 )
 
+type PendaftaranResponse struct {
+	ID              int    `json:"id"`
+	IdSiswa         int    `json:"id_siswa"`
+	IdBeasiswa      int    `json:"id_beasiswa"`
+	NamaSiswa       string `json:"nama_siswa"`
+	EmailSiswa      string `json:"email_siswa"`
+	NamaBeasiswa    string `json:"nama_beasiswa"`
+	JenjangBeasiswa string `json:"jenjang_beasiswa"`
+	TanggalDaftar   string `json:"tanggal_daftar"`
+}
+
 type PendaftaranRepository struct {
 	mu *sync.Mutex
 	db *sql.DB
@@ -17,73 +28,124 @@ func NewPendaftaranRepository(db *sql.DB) *PendaftaranRepository {
 	}
 }
 
-func (r *PendaftaranRepository) GetPendaftaranAll() ([]Pendaftaran, error) {
+func (r *PendaftaranRepository) GetPendaftaranAll() ([]PendaftaranResponse, error) {
 	r.mu.Lock()
 	defer r.mu.Unlock()
-	var result []Pendaftaran
+	var result []PendaftaranResponse
 
-	sqlStatement := "SELECT * FROM pendaftaran"
+	sqlStatement :=
+		`SELECT
+    p.id as id_pendaftaran,
+    s.id as id_siswa,
+    b.id as id_beasiswa,
+    s.nama AS nama_siswa,
+    s.email AS email_siswa,
+    b.nama AS nama_beasiswa,
+    b.jenjang_pendidikan AS jenjang_pendidikan,
+    p.tanggal_daftar AS tanggal_daftar
+  FROM pendaftaran p
+  INNER JOIN siswa s on p.id_siswa = s.id
+  INNER JOIN beasiswa b on p.id_beasiswa = b.id`
 
 	rows, err := r.db.Query(sqlStatement)
-
 	if err != nil {
-		return []Pendaftaran{}, err
+		return []PendaftaranResponse{}, err
 	}
+
 	for rows.Next() {
-		var p Pendaftaran
-		rows.Scan(&p.Id, &p.IdBeasiswa, &p.IdSiswa, &p.TanggalDaftar, &p.Status)
+		var p PendaftaranResponse
+		rows.Scan(&p.ID, &p.IdSiswa, &p.IdBeasiswa, &p.NamaSiswa, &p.EmailSiswa, &p.NamaBeasiswa, &p.JenjangBeasiswa, &p.TanggalDaftar)
 		result = append(result, p)
 	}
-
 	return result, nil
+
 }
 
-func (r *PendaftaranRepository) GetPendaftaranById(id int) (Pendaftaran, error) {
+func (r *PendaftaranRepository) GetPendaftaranById(id int) (PendaftaranResponse, error) {
 	r.mu.Lock()
 	defer r.mu.Unlock()
-	var p Pendaftaran
-	err := r.db.QueryRow("SELECT * FROM pendaftaran WHERE id = ?", id).Scan(&p.Id, &p.IdBeasiswa, &p.IdSiswa, &p.TanggalDaftar, &p.Status)
+	var p PendaftaranResponse
+	err := r.db.QueryRow(
+		`SELECT
+    p.id as id_pendaftaran,
+    s.id as id_siswa,
+    b.id as id_beasiswa,
+    s.nama AS nama_siswa,
+    s.email AS email_siswa,
+    b.nama AS nama_beasiswa,
+    b.jenjang_pendidikan AS jenjang_pendidikan,
+    p.tanggal_daftar AS tanggal_daftar
+  FROM pendaftaran p
+  INNER JOIN siswa s on p.id_siswa = s.id
+  INNER JOIN beasiswa b on p.id_beasiswa = b.id
+  WHERE p.id = ?`, id).Scan(&p.ID, &p.IdSiswa, &p.IdBeasiswa, &p.NamaSiswa, &p.EmailSiswa, &p.NamaBeasiswa, &p.JenjangBeasiswa, &p.TanggalDaftar)
 	if err != nil {
 		return p, err
 	}
 	return p, nil
 }
 
-func (r *PendaftaranRepository) GetBySiswa(idSiswa int) ([]Pendaftaran, error) {
+func (r *PendaftaranRepository) GetBySiswa(idSiswa int) ([]PendaftaranResponse, error) {
 	r.mu.Lock()
 	defer r.mu.Unlock()
-	var result []Pendaftaran
+	var result []PendaftaranResponse
 
-	sqlStatement := "SELECT * FROM pendaftaran WHERE id_siswa = ?"
+	sqlStatement :=
+		`SELECT
+    p.id as id_pendaftaran,
+    s.id as id_siswa,
+    b.id as id_beasiswa,
+    s.nama AS nama_siswa,
+    s.email AS email_siswa,
+    b.nama AS nama_beasiswa,
+    b.jenjang_pendidikan AS jenjang_pendidikan,
+    p.tanggal_daftar AS tanggal_daftar
+  FROM pendaftaran p
+  INNER JOIN siswa s on p.id_siswa = s.id
+  INNER JOIN beasiswa b on p.id_beasiswa = b.id
+  WHERE p.id_siswa = ?`
 
 	rows, err := r.db.Query(sqlStatement, idSiswa)
 	if err != nil {
-		return []Pendaftaran{}, err
+		return []PendaftaranResponse{}, err
 	}
 
 	for rows.Next() {
-		var p Pendaftaran
-		rows.Scan(&p.Id, &p.IdBeasiswa, &p.IdSiswa, &p.TanggalDaftar, &p.Status)
+		var p PendaftaranResponse
+		rows.Scan(&p.ID, &p.IdSiswa, &p.IdBeasiswa, &p.NamaSiswa, &p.EmailSiswa, &p.NamaBeasiswa, &p.JenjangBeasiswa, &p.TanggalDaftar)
 		result = append(result, p)
 	}
 	return result, nil
 }
 
-func (r *PendaftaranRepository) GetByBeasiswa(idBeasiswa int) ([]Pendaftaran, error) {
+func (r *PendaftaranRepository) GetByBeasiswa(idBeasiswa int) ([]PendaftaranResponse, error) {
 	r.mu.Lock()
 	defer r.mu.Unlock()
-	var result []Pendaftaran
+	var result []PendaftaranResponse
 
-	sqlStatement := "SELECT * FROM pendaftaran WHERE id_beasiswa = ?"
+	sqlStatement :=
+		`SELECT
+    p.id as id_pendaftaran,
+    s.id as id_siswa,
+    b.id as id_beasiswa,
+    s.nama AS nama_siswa,
+    s.email AS email_siswa,
+    b.nama AS nama_beasiswa,
+    b.jenjang_pendidikan AS jenjang_pendidikan,
+    p.tanggal_daftar AS tanggal_daftar
+  FROM pendaftaran p
+  INNER JOIN siswa s on p.id_siswa = s.id
+  INNER JOIN beasiswa b on p.id_beasiswa = b.id
+  WHERE p.id_beasiswa = ?`
 
 	rows, err := r.db.Query(sqlStatement, idBeasiswa)
 	if err != nil {
-		return []Pendaftaran{}, err
+		return []PendaftaranResponse{}, err
 	}
 
 	for rows.Next() {
-		var p Pendaftaran
-		rows.Scan(&p.Id, &p.IdBeasiswa, &p.IdSiswa, &p.TanggalDaftar, &p.Status)
+		var p PendaftaranResponse
+		rows.Scan(&p.ID, &p.IdSiswa, &p.IdBeasiswa, &p.NamaSiswa, &p.EmailSiswa, &p.NamaBeasiswa, &p.JenjangBeasiswa, &p.TanggalDaftar)
 		result = append(result, p)
 	}
 	return result, nil
