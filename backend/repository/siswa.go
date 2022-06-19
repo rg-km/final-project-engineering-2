@@ -2,6 +2,7 @@ package repository
 
 import (
 	"database/sql"
+	"fmt"
 	"sync"
 )
 
@@ -23,7 +24,7 @@ func (r *SiswaRepository) Login(email string, password string) (Siswa, error) {
 	var s Siswa
 	err := r.db.QueryRow("SELECT * FROM siswa WHERE email = ? AND password = ?", email, password).Scan(&s.Id, &s.Nama, &s.Password, &s.Email, &s.JenjangPendidikan, &s.Nik, &s.TanggalLahir, &s.TempatLahir)
 	if err != nil {
-		return s, err
+		return s, fmt.Errorf("invalid email or password")
 	}
 	return s, nil
 }

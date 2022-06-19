@@ -24,6 +24,7 @@ type BeasiswaListSuccessResponse struct {
 }
 
 func (a *API) getBeasiswa(w http.ResponseWriter, r *http.Request) {
+	a.AllowOrigin(w, r)
 	encoder := json.NewEncoder(w)
 	w.Header().Set("Content-Type", "application/json")
 	response := BeasiswaListSuccessResponse{}
@@ -54,6 +55,7 @@ func (a *API) getBeasiswa(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *API) getBeasiswaById(w http.ResponseWriter, r *http.Request) {
+	a.AllowOrigin(w, r)
 	encoder := json.NewEncoder(w)
 	w.Header().Set("Content-Type", "application/json")
 	response := BeasiswaListSuccessResponse{}
