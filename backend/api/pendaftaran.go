@@ -9,20 +9,23 @@ import (
 type PendaftaranListErrorResponse struct {
 	Error string `json:"error"`
 }
-
-type ListPendaftaran struct {
-	Id                string `json:"id"`
-	IdBeasiswa        string `json:"id_beasiswa"`
-	IdSiswa 		  string `json:"id_siswa"`
-	TanggalDaftar     string `json:"tanggal_daftar"`
-	Status            string `json:"status"`
+type PendaftaranSuccessfulResponse struct {
+	Msg string `json:"msg"`
 }
 
-type PendaftaranListResponse struct{
+type ListPendaftaran struct {
+	Id            int    `json:"id"`
+	IdBeasiswa    int    `json:"id_beasiswa"`
+	IdSiswa       int    `json:"id_siswa"`
+	TanggalDaftar string `json:"tanggal_daftar"`
+	Status        string `json:"status"`
+}
+
+type PendaftaranListResponse struct {
 	Pendaftaran []ListPendaftaran `json:"pendaftaran"`
 }
 
-func (a *API) getAllPendaftaran (w http.ResponseWriter, r *http.Request) {
+func (a *API) getAllPendaftaran(w http.ResponseWriter, r *http.Request) {
 	encoder := json.NewEncoder(w)
 	w.Header().Set("Content-Type", "application/json")
 	response := PendaftaranListResponse{}
@@ -42,20 +45,19 @@ func (a *API) getAllPendaftaran (w http.ResponseWriter, r *http.Request) {
 
 	for _, p := range pendaftaran {
 		response.Pendaftaran = append(response.Pendaftaran, ListPendaftaran{
-			Id:                strconv.Itoa(int(p.Id)),
-			IdBeasiswa:        strconv.Itoa(int(p.IdBeasiswa)),
-			IdSiswa:           strconv.Itoa(int(p.IdSiswa)),
-			TanggalDaftar:     p.TanggalDaftar,
-			Status:           p.Status,
+			Id:            int(p.Id),
+			IdBeasiswa:    int(p.IdBeasiswa),
+			IdSiswa:       int(p.IdSiswa),
+			TanggalDaftar: p.TanggalDaftar,
+			Status:        p.Status,
 		})
 	}
 
-	encoder.Encode(response)
-
 	w.WriteHeader(http.StatusOK)
+	encoder.Encode(response)
 }
 
-func (a *API) getPendaftaranById (w http.ResponseWriter, r *http.Request) {
+func (a *API) getPendaftaranById(w http.ResponseWriter, r *http.Request) {
 	encoder := json.NewEncoder(w)
 	w.Header().Set("Content-Type", "application/json")
 	response := PendaftaranListResponse{}
@@ -64,7 +66,7 @@ func (a *API) getPendaftaranById (w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(r.URL.Query().Get("id"))
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		encoder.Encode(PendaftaranListErrorResponse{Error: err.Error()})
+		encoder.Encode(PendaftaranListErrorResponse{Error: "id query required"})
 		return
 	}
 
@@ -76,19 +78,18 @@ func (a *API) getPendaftaranById (w http.ResponseWriter, r *http.Request) {
 	}
 
 	response.Pendaftaran = append(response.Pendaftaran, ListPendaftaran{
-		Id:                strconv.Itoa(int(pendaftaran.Id)),
-		IdBeasiswa:        strconv.Itoa(int(pendaftaran.IdBeasiswa)),
-		IdSiswa:           strconv.Itoa(int(pendaftaran.IdSiswa)),
-		TanggalDaftar:     pendaftaran.TanggalDaftar,
-		Status:           pendaftaran.Status,
+		Id:            int(pendaftaran.Id),
+		IdBeasiswa:    int(pendaftaran.IdBeasiswa),
+		IdSiswa:       int(pendaftaran.IdSiswa),
+		TanggalDaftar: pendaftaran.TanggalDaftar,
+		Status:        pendaftaran.Status,
 	})
 
-	encoder.Encode(response)
-
 	w.WriteHeader(http.StatusOK)
+	encoder.Encode(response)
 }
 
-func (a *API) getPendaftaranBySiswa (w http.ResponseWriter, r *http.Request) {
+func (a *API) getPendaftaranBySiswa(w http.ResponseWriter, r *http.Request) {
 	encoder := json.NewEncoder(w)
 	w.Header().Set("Content-Type", "application/json")
 	response := PendaftaranListResponse{}
@@ -97,7 +98,7 @@ func (a *API) getPendaftaranBySiswa (w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(r.URL.Query().Get("id"))
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		encoder.Encode(PendaftaranListErrorResponse{Error: err.Error()})
+		encoder.Encode(PendaftaranListErrorResponse{Error: "id query is required"})
 		return
 	}
 
@@ -110,20 +111,19 @@ func (a *API) getPendaftaranBySiswa (w http.ResponseWriter, r *http.Request) {
 
 	for _, p := range pendaftaran {
 		response.Pendaftaran = append(response.Pendaftaran, ListPendaftaran{
-			Id:                strconv.Itoa(int(p.Id)),
-			IdBeasiswa:        strconv.Itoa(int(p.IdBeasiswa)),
-			IdSiswa:           strconv.Itoa(int(p.IdSiswa)),
-			TanggalDaftar:     p.TanggalDaftar,
-			Status:           p.Status,
+			Id:            int(p.Id),
+			IdBeasiswa:    int(p.IdBeasiswa),
+			IdSiswa:       int(p.IdSiswa),
+			TanggalDaftar: p.TanggalDaftar,
+			Status:        p.Status,
 		})
 	}
 
-	encoder.Encode(response)
-
 	w.WriteHeader(http.StatusOK)
+	encoder.Encode(response)
 }
 
-func (a *API) getPendaftaranByBeasiswa (w http.ResponseWriter, r *http.Request) {
+func (a *API) getPendaftaranByBeasiswa(w http.ResponseWriter, r *http.Request) {
 	encoder := json.NewEncoder(w)
 	w.Header().Set("Content-Type", "application/json")
 	response := PendaftaranListResponse{}
@@ -132,7 +132,7 @@ func (a *API) getPendaftaranByBeasiswa (w http.ResponseWriter, r *http.Request) 
 	id, err := strconv.Atoi(r.URL.Query().Get("id"))
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		encoder.Encode(PendaftaranListErrorResponse{Error: err.Error()})
+		encoder.Encode(PendaftaranListErrorResponse{Error: "id query is required"})
 		return
 	}
 
@@ -145,20 +145,20 @@ func (a *API) getPendaftaranByBeasiswa (w http.ResponseWriter, r *http.Request) 
 
 	for _, p := range pendaftaran {
 		response.Pendaftaran = append(response.Pendaftaran, ListPendaftaran{
-			Id:                strconv.Itoa(int(p.Id)),
-			IdBeasiswa:        strconv.Itoa(int(p.IdBeasiswa)),
-			IdSiswa:           strconv.Itoa(int(p.IdSiswa)),
-			TanggalDaftar:     p.TanggalDaftar,
-			Status:           p.Status,
+			Id:            int(p.Id),
+			IdBeasiswa:    int(p.IdBeasiswa),
+			IdSiswa:       int(p.IdSiswa),
+			TanggalDaftar: p.TanggalDaftar,
+			Status:        p.Status,
 		})
 	}
 
+	w.WriteHeader(http.StatusOK)
 	encoder.Encode(response)
 
-	w.WriteHeader(http.StatusOK)
 }
 
-func ( a *API) createPendaftaran (w http.ResponseWriter, r *http.Request) {
+func (a *API) createPendaftaran(w http.ResponseWriter, r *http.Request) {
 	encoder := json.NewEncoder(w)
 	w.Header().Set("Content-Type", "application/json")
 	response := PendaftaranListResponse{}
@@ -172,7 +172,7 @@ func ( a *API) createPendaftaran (w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = a.pendaftaranRepo.CreatePendaftaran(pendaftaran.IdBeasiswa, pendaftaran.IdSiswa, pendaftaran.TanggalDaftar, pendaftaran.Status)
+	err = a.pendaftaranRepo.CreatePendaftaran(pendaftaran.IdBeasiswa, pendaftaran.IdSiswa, pendaftaran.Status)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		encoder.Encode(PendaftaranListErrorResponse{Error: err.Error()})
@@ -180,14 +180,14 @@ func ( a *API) createPendaftaran (w http.ResponseWriter, r *http.Request) {
 	}
 
 	response.Pendaftaran = append(response.Pendaftaran, ListPendaftaran{
-		Id:                strconv.Itoa(int(pendaftaran.Id)),
-		IdBeasiswa:        strconv.Itoa(int(pendaftaran.IdBeasiswa)),
-		IdSiswa:           strconv.Itoa(int(pendaftaran.IdSiswa)),
-		TanggalDaftar:     pendaftaran.TanggalDaftar,
-		Status:            pendaftaran.Status,
+		Id:            pendaftaran.Id,
+		IdBeasiswa:    pendaftaran.IdBeasiswa,
+		IdSiswa:       pendaftaran.IdSiswa,
+		TanggalDaftar: pendaftaran.TanggalDaftar,
+		Status:        pendaftaran.Status,
 	})
-
-	encoder.Encode(response)
-
 	w.WriteHeader(http.StatusOK)
+	w.Header().Set("Content-Type", "application/json")
+	encoder.Encode(PendaftaranSuccessfulResponse{Msg: "Successful"})
+
 }

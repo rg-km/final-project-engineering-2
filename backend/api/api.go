@@ -39,7 +39,7 @@ func NewApi(siswaRepo repository.SiswaRepository, beasiswaRepo repository.Beasis
 	mux.Handle("/api/pendaftaran/siswa", api.GET(http.HandlerFunc(api.getPendaftaranBySiswa)))
 	mux.Handle("/api/pendaftaran/beasiswa", api.GET(http.HandlerFunc(api.getPendaftaranByBeasiswa)))
 
-	mux.Handle("/api/pendaftaran", api.POST(http.HandlerFunc(api.createPendaftaran)))
+	mux.Handle("/api/pendaftaran/create", api.POST(http.HandlerFunc(api.createPendaftaran)))
 
 	return api
 }

@@ -89,16 +89,17 @@ func (r *PendaftaranRepository) GetByBeasiswa(idBeasiswa int) ([]Pendaftaran, er
 	return result, nil
 }
 
-func (r *PendaftaranRepository) CreatePendaftaran(idBeasiswa int, idSiswa int, tanggalDaftar string, status string) error {
+func (r *PendaftaranRepository) CreatePendaftaran(idBeasiswa int, idSiswa int, status string) error {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 
-	sqlStatement := "INSERT INTO pendaftaran (id_beasiswa, id_siswa, tanggal_daftar, status) VALUES (?, ?, ?, ?)"
+	sqlStatement := "INSERT INTO pendaftaran (id_beasiswa, id_siswa, tanggal_daftar, status) VALUES (?, ?, date('now'), ?)"
 
-	_, err := r.db.Exec(sqlStatement, idBeasiswa, idSiswa, "", "")
+	_, err := r.db.Exec(sqlStatement, idBeasiswa, idSiswa, status)
 	if err != nil {
 		return err
 	}
 
 	return nil
 }
+
