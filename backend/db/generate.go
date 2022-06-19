@@ -31,7 +31,9 @@ func Migrate(db *sql.DB) {
 			id_beasiswa INTEGER,
 			id_siswa INTEGER,
 			tanggal_daftar TEXT,
-			status TEXT);
+			status TEXT,
+      UNIQUE(id_siswa, id_beasiswa)
+    );
 		
 		CREATE TABLE IF NOT EXISTS mitra (
 			id INTEGER PRIMARY KEY AUTOINCREMENT,
