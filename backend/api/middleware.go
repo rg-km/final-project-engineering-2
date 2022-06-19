@@ -84,7 +84,6 @@ func (api *API) POST(next http.Handler) http.Handler {
 		api.AllowOrigin(w, r)
 		encoder := json.NewEncoder(w)
 		if r.Method != http.MethodPost {
-			w.WriteHeader(http.StatusMethodNotAllowed)
 			encoder.Encode(AuthErrorResponse{Error: "Need POST Method!"})
 			return
 		}
@@ -92,4 +91,3 @@ func (api *API) POST(next http.Handler) http.Handler {
 		next.ServeHTTP(w, r)
 	})
 }
-

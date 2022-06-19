@@ -4,23 +4,24 @@ import (
 	"bytes"
 	"database/sql"
 	"encoding/json"
-	. "github.com/onsi/ginkgo/v2"
-	. "github.com/onsi/gomega"
 	"io/ioutil"
+	"net/http"
 	"net/http/httptest"
 	"os"
+
+	. "github.com/onsi/ginkgo/v2"
+	. "github.com/onsi/gomega"
 
 	"final-project-eng2-be/db"
 	"final-project-eng2-be/repository"
 )
 
 var _ = Describe("Api testing", func() {
+	AfterEach(func() {
+		os.Remove("./beasiswa.db")
+	})
 	Describe("login", func() {
 		When("email and password are correct", func() {
-
-			AfterEach(func() {
-				os.Remove("./beasiswa.db")
-			})
 
 			It("should return email and token", func() {
 				db, err := sql.Open("sqlite3", "./beasiswa.db")
@@ -28,7 +29,7 @@ var _ = Describe("Api testing", func() {
 				database.Migrate(db)
 
 				w := httptest.NewRecorder()
-				r := httptest.NewRequest("POST", "/api/login", bytes.NewBuffer([]byte(`{"email":"ex@gmail.com","password":"123456"}`)))
+				r := httptest.NewRequest("POST", "/api/login", bytes.NewBuffer([]byte(`{"email":"ex@gmail.com","password":"12345"}`)))
 				r.Header.Set("Content-Type", "application/json")
 				siswaRepo := repository.NewSiswaRepository(db)
 				beasiswaRepo := repository.NewBeasiswaRepository(db)
@@ -37,11 +38,13 @@ var _ = Describe("Api testing", func() {
 				api.login(w, r)
 
 				res := w.Result()
+				Expect(res.StatusCode).To(Equal(http.StatusOK))
+
 				defer res.Body.Close()
 				body, err := ioutil.ReadAll(res.Body)
 				Expect(err).To(BeNil())
 
-				var data map[string]string
+				var data map[string]interface{}
 				err = json.Unmarshal(body, &data)
 				Expect(err).To(BeNil())
 
@@ -82,7 +85,7 @@ var _ = Describe("Api testing", func() {
 				database.Migrate(db)
 
 				w := httptest.NewRecorder()
-				r := httptest.NewRequest("POST", "/api/register", bytes.NewBuffer([]byte(`{"nama":"ex","email":"ex@gmail.com", "password":"123456", "jenjang_pendidikan":"S1", tempat_lahir":"Bandung", tanggal_lahir":"2020-01-01", nik":"123456789"}`)))
+				r := httptest.NewRequest("POST", "/api/register", bytes.NewBuffer([]byte(`{"nama":"ex","email":"ex@gmail.com", "password":"123456", "jenjang_pendidikan":"S1", "tempat_lahir":"Bandung", "tanggal_lahir":"2020-01-01", "nik":"123456789"}`)))
 				r.Header.Set("Content-Type", "application/json")
 
 				beasiswaRepo := repository.NewBeasiswaRepository(db)
@@ -90,16 +93,17 @@ var _ = Describe("Api testing", func() {
 				api.register(w, r)
 
 				res := w.Result()
+				Expect(res.StatusCode).To(Equal(http.StatusOK))
 				defer res.Body.Close()
 				body, err := ioutil.ReadAll(res.Body)
 				Expect(err).To(BeNil())
 
-				var data map[string]string
+				var data map[string]interface{}
 				err = json.Unmarshal(body, &data)
 				Expect(err).To(BeNil())
 
 				Expect(data["email"]).To(Equal("ex@gmail.com"))
-				Expect(data["name"]).To(Equal("ex"))
+				Expect(data["nama"]).To(Equal("ex"))
 			})
 		})
 		When("register failed", func() {
@@ -117,11 +121,12 @@ var _ = Describe("Api testing", func() {
 				api.register(w, r)
 
 				res := w.Result()
+				Expect(res.StatusCode).ToNot(Equal(http.StatusOK))
 				defer res.Body.Close()
 				body, err := ioutil.ReadAll(res.Body)
 				Expect(err).To(BeNil())
 
-				var data map[string]string
+				var data map[string]interface{}
 				err = json.Unmarshal(body, &data)
 				Expect(err).To(BeNil())
 

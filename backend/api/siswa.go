@@ -63,6 +63,7 @@ func (a *API) GetSiswaByToken(w http.ResponseWriter, r *http.Request) {
 		Name:    "token",
 		Value:   newTokenString,
 		Expires: expTime,
+		Path:    "/api",
 	})
 
 	w.WriteHeader(http.StatusOK)
