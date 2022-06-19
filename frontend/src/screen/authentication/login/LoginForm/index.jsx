@@ -3,16 +3,15 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import ENV from "../../../../.env";
 import Form from "../../../../components/data-entry/Form";
-import AlertModal from "../../../../components/AlertModal";
 import useAuth from "../../../../hooks/useAuth";
 import "../../../../styles/css/main.css";
 import { useState } from "react";
-import { Spinner } from "@chakra-ui/react";
+import { Spinner, useToast } from "@chakra-ui/react";
 
 const LoginForm = () => {
   const navigate = useNavigate();
-  const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
+  const toast = useToast();
 
   const {
     register,
@@ -33,12 +32,25 @@ const LoginForm = () => {
       credentials: "include",
     })
       .then((res) => {
-        setError(false);
+        toast({
+          title: "Login Success.",
+          description: "Welcome to Raih Beasiswa.",
+          status: "success",
+          duration: 9000,
+          isClosable: true,
+        });
         setAuthToken(res.data.token);
         navigate("/");
       })
       .catch((err) => {
-        if (err) setError(true);
+        if (err)
+          toast({
+            title: "Error Login.",
+            description: "Email or Password incorrect.",
+            status: "error",
+            duration: 9000,
+            isClosable: true,
+          });
       });
     setLoading(false);
   };
@@ -68,9 +80,6 @@ const LoginForm = () => {
           register={register}
           errors={errors}
         />
-        {error && (
-          <AlertModal title="Error Login" errorMsg="Email or Password Wrong" />
-        )}
         <div className="column-flex container">
           <div className="row-flex spacing-text-button">
             <p className="md-4">Belum punya akun? </p>

@@ -1,17 +1,16 @@
-import { Spinner } from "@chakra-ui/react";
+import { Spinner, useToast } from "@chakra-ui/react";
 import axios from "axios";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import ENV from "../../../../.env";
-import AlertModal from "../../../../components/AlertModal";
 import Form from "../../../../components/data-entry/Form";
 import "../../../../styles/css/main.css";
 
 const RegisterForm = () => {
   const navigate = useNavigate();
-  const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
+  const toast = useToast();
 
   const {
     register,
@@ -30,13 +29,26 @@ const RegisterForm = () => {
       credentials: "include",
     })
       .then((res) => {
-        setError(false);
+        toast({
+          title: "Register Success.",
+          description: "Redirect to Login Page.",
+          status: "success",
+          duration: 9000,
+          isClosable: true,
+        });
         if (res) {
           navigate("/login");
         }
       })
       .catch((err) => {
-        if (err) setError(true);
+        if (err)
+          toast({
+            title: "Error Register.",
+            description: "There is data incorrect.",
+            status: "error",
+            duration: 9000,
+            isClosable: true,
+          });
       });
   };
 
@@ -90,9 +102,6 @@ const RegisterForm = () => {
           register={register}
           errors={errors}
         />
-        {error && (
-          <AlertModal title="Error Login" errorMsg="Email or Password Wrong" />
-        )}
         <div className="column-flex container">
           <div className="row-flex spacing-text-button">
             <p className="md-4">Sudah punya akun? </p>
