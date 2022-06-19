@@ -103,3 +103,16 @@ func (r *PendaftaranRepository) CreatePendaftaran(idBeasiswa int, idSiswa int, s
 	return nil
 }
 
+func (r *PendaftaranRepository) UpdatePendaftaran(id int, status string) error {
+	r.mu.Lock()
+	defer r.mu.Unlock()
+
+	sqlStatement := "UPDATE pendaftaran SET status = ? WHERE id = ?"
+
+	_, err := r.db.Exec(sqlStatement, status, id)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

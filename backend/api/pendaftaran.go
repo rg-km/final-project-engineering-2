@@ -172,6 +172,10 @@ func (a *API) createPendaftaran(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if pendaftaran.Status == "" {
+		pendaftaran.Status = "Menunggu Pengumuman"
+	} 
+
 	err = a.pendaftaranRepo.CreatePendaftaran(pendaftaran.IdBeasiswa, pendaftaran.IdSiswa, pendaftaran.Status)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
@@ -189,5 +193,37 @@ func (a *API) createPendaftaran(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	w.Header().Set("Content-Type", "application/json")
 	encoder.Encode(PendaftaranSuccessfulResponse{Msg: "Successful"})
+}
 
+func (a *API) updatePendaftaran(w http.ResponseWriter, r *http.Request) {
+	encoder := json.NewEncoder(w)
+	w.Header().Set("Content-Type", "application/json")
+	response := PendaftaranListResponse{}
+	response.Pendaftaran = make([]ListPendaftaran, 0)
+
+	var pendaftaran ListPendaftaran
+	err := json.NewDecoder(r.Body).Decode(&pendaftaran)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		encoder.Encode(PendaftaranListErrorResponse{Error: err.Error()})
+		return
+	}
+
+	err = a.pendaftaranRepo.UpdatePendaftaran(pendaftaran.Id, pendaftaran.Status)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		encoder.Encode(PendaftaranListErrorResponse{Error: err.Error()})
+		return
+	}
+
+	response.Pendaftaran = append(response.Pendaftaran, ListPendaftaran{
+		Id:            pendaftaran.Id,
+		IdBeasiswa:    pendaftaran.IdBeasiswa,
+		IdSiswa:       pendaftaran.IdSiswa,
+		TanggalDaftar: pendaftaran.TanggalDaftar,
+		Status:        pendaftaran.Status,
+	})
+	w.WriteHeader(http.StatusOK)
+	w.Header().Set("Content-Type", "application/json")
+	encoder.Encode(PendaftaranSuccessfulResponse{Msg: "Successful"})
 }
