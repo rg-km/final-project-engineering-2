@@ -31,7 +31,7 @@ func NewPendaftaranRepository(db *sql.DB) *PendaftaranRepository {
 func (r *PendaftaranRepository) GetPendaftaranAll() ([]PendaftaranResponse, error) {
 	r.mu.Lock()
 	defer r.mu.Unlock()
-	var result []PendaftaranResponse
+	var result []PendaftaranResponse = []PendaftaranResponse{}
 
 	sqlStatement :=
 		`SELECT
@@ -88,7 +88,7 @@ func (r *PendaftaranRepository) GetPendaftaranById(id int) (PendaftaranResponse,
 func (r *PendaftaranRepository) GetBySiswa(idSiswa int) ([]PendaftaranResponse, error) {
 	r.mu.Lock()
 	defer r.mu.Unlock()
-	var result []PendaftaranResponse
+	var result []PendaftaranResponse = []PendaftaranResponse{}
 
 	sqlStatement :=
 		`SELECT
@@ -121,7 +121,7 @@ func (r *PendaftaranRepository) GetBySiswa(idSiswa int) ([]PendaftaranResponse, 
 func (r *PendaftaranRepository) GetByBeasiswa(idBeasiswa int) ([]PendaftaranResponse, error) {
 	r.mu.Lock()
 	defer r.mu.Unlock()
-	var result []PendaftaranResponse
+	var result []PendaftaranResponse = []PendaftaranResponse{}
 
 	sqlStatement :=
 		`SELECT
