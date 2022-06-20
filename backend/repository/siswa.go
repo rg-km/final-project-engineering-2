@@ -40,6 +40,29 @@ func (r *SiswaRepository) Register(nama string, password string, email string, j
 	return s, nil
 }
 
+func (r *SiswaRepository) UpdateSiswa(siswa Siswa) error {
+	r.mu.Lock()
+	defer r.mu.Unlock()
+
+	sqlStatement := `
+  UPDATE siswa
+  SET 
+    nama = ?,
+    email = ?,
+    jenjang_pendidikan = ?,
+    tanggal_lahir = ?,
+    tempat_lahir = ?
+  WHERE id = ?;
+  `
+	_, err := r.db.Exec(sqlStatement, siswa.Nama, siswa.Email, siswa.JenjangPendidikan, siswa.TanggalLahir, siswa.TempatLahir, siswa.Id)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (r *SiswaRepository) GetAll() ([]Siswa, error) {
 	r.mu.Lock()
 	defer r.mu.Unlock()

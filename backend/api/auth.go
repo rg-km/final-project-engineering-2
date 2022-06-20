@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/go-playground/validator/v10"
@@ -12,6 +13,7 @@ import (
 )
 
 type Siswa struct {
+	Id                string `json:"id"` //untuk update
 	Email             string `json:"email" validate:"required,email"`
 	Password          string `json:"password" validate:"required"`
 	Nama              string `json:"nama" validate:"required"`
@@ -121,7 +123,9 @@ func (api *API) login(w http.ResponseWriter, r *http.Request) {
 		encoder.Encode(AuthErrorResponse{Error: err.Error()})
 		return
 	}
+	idStr := strconv.Itoa(int(res.Id))
 	siswa := Siswa{
+		Id:                idStr,
 		Nama:              res.Nama,
 		Email:             res.Email,
 		JenjangPendidikan: res.JenjangPendidikan,
