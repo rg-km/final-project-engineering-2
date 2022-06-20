@@ -51,12 +51,14 @@ func (r *SiswaRepository) UpdateSiswa(siswa Siswa) error {
     email = ?,
     jenjang_pendidikan = ?,
     tanggal_lahir = ?,
-    tempat_lahir = ?
+    tempat_lahir = ?,
+    kota_domisili = ?
   WHERE id = ?;
   `
-	_, err := r.db.Exec(sqlStatement, siswa.Nama, siswa.Email, siswa.JenjangPendidikan, siswa.TanggalLahir, siswa.TempatLahir, siswa.Id)
+	_, err := r.db.Exec(sqlStatement, siswa.Nama, siswa.Email, siswa.JenjangPendidikan, siswa.TanggalLahir, siswa.TempatLahir, siswa.KotaDomisili, siswa.Id)
 
 	if err != nil {
+		fmt.Println(err.Error())
 		return err
 	}
 

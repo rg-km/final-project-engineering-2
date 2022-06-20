@@ -70,7 +70,6 @@ func (a *API) UpdateSiswa(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-
 	siswaNew := repository.Siswa{
 		Id:                int64(idNum),
 		Nama:              siswaInput.Nama,
@@ -78,6 +77,7 @@ func (a *API) UpdateSiswa(w http.ResponseWriter, r *http.Request) {
 		TanggalLahir:      siswaInput.TanggalLahir,
 		TempatLahir:       siswaInput.TempatLahir,
 		JenjangPendidikan: siswaInput.JenjangPendidikan,
+		KotaDomisili:      siswaInput.KotaDomisili,
 	}
 
 	if siswaInput.Nama == "" {
@@ -95,13 +95,16 @@ func (a *API) UpdateSiswa(w http.ResponseWriter, r *http.Request) {
 	if siswaInput.JenjangPendidikan == "" {
 		siswaNew.JenjangPendidikan = siswaCurrent.JenjangPendidikan
 	}
+	if siswaInput.KotaDomisili == "" {
+		siswaNew.KotaDomisili = siswaCurrent.KotaDomisili
+	}
 	err = a.siswaRepo.UpdateSiswa(siswaNew)
 
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
-	fmt.Println(siswaInput.Nama)
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(SiswaSuccessfulResponse{
 		Msg: "Successful",
@@ -203,6 +206,7 @@ func (a *API) GetSiswaByID(w http.ResponseWriter, r *http.Request) {
 		encoder.Encode(SiswaErrorResponse{Error: fmt.Sprintf("No siswa with id = %d", id)})
 		return
 	}
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	encoder.Encode(res)
 	return
