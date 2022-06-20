@@ -12,7 +12,8 @@ type PendaftaranListErrorResponse struct {
 	Error string `json:"error"`
 }
 type PendaftaranSuccessfulResponse struct {
-	Msg string `json:"msg"`
+	Msg    string `json:"msg"`
+	Status string `json:"status"`
 }
 
 type PendaftaranListResponse struct {
@@ -128,18 +129,21 @@ func (a *API) createPendaftaran(w http.ResponseWriter, r *http.Request) {
 	if pendaftaran.Status == "" {
 		pendaftaran.Status = "Menunggu Pengumuman"
 	}
-
-	ctx := r.Context().Value("email")
-	emailSiswa := ctx.(string)
-	siswa, err := a.siswaRepo.GetSiswaByEmail(emailSiswa)
+	c, err := r.Cookie("token")
 	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		encoder.Encode(PendaftaranListErrorResponse{Error: err.Error()})
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+	tokenStr := c.Value
+
+	siswaFromToken, err := a.getSiswaFromToken(tokenStr)
+	idNum, _ := strconv.Atoi(siswaFromToken.Id)
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
 		return
 	}
 
-	idSiswa := siswa.Id
-	err = a.pendaftaranRepo.CreatePendaftaran(int(pendaftaran.IdBeasiswa), int(idSiswa), pendaftaran.Status)
+	err = a.pendaftaranRepo.CreatePendaftaran(int(pendaftaran.IdBeasiswa), idNum, pendaftaran.Status)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		encoder.Encode(PendaftaranListErrorResponse{Error: err.Error()})
@@ -147,7 +151,10 @@ func (a *API) createPendaftaran(w http.ResponseWriter, r *http.Request) {
 	}
 	w.WriteHeader(http.StatusOK)
 	w.Header().Set("Content-Type", "application/json")
-	encoder.Encode(PendaftaranSuccessfulResponse{Msg: "Successful"})
+	encoder.Encode(PendaftaranSuccessfulResponse{
+		Msg:    "Successful",
+		Status: pendaftaran.Status,
+	})
 }
 
 func (a *API) updatePendaftaran(w http.ResponseWriter, r *http.Request) {
