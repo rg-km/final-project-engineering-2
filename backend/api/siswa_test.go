@@ -58,7 +58,8 @@ var _ = Describe("Siswa testing", func() {
 				jenis_beasiswa TEXT,
 				jenjang_pendidikan TEXT,
 				tanggal_mulai TEXT,
-				tanggal_selesai TEXT);
+				tanggal_selesai TEXT,
+				deskripsi TEXT);
 				
 				CREATE TABLE IF NOT EXISTS siswa (
 					id INTEGER PRIMARY KEY AUTOINCREMENT,
