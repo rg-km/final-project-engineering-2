@@ -1,0 +1,55 @@
+.available-scholarships {
+  padding: 40px;
+}
+
+.available-scholarships-list {
+  padding: 30px;
+  display: grid;
+  grid-template-columns: repeat(4, 250px);
+  align-items: center;
+  justify-items: center;
+  justify-content: center;
+  gap: 40px;
+}
+
+.available-scholarships-item {
+  background-color: rgba(255, 255, 255, 1);
+  width: 250px;
+  padding: 30px 15px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  border-width: 10px;
+  border-color: white;
+  border-radius: 5px;
+  padding: 20px;
+  cursor: pointer;
+  transition: 0.5s;
+}
+
+.available-scholarships-item:hover {
+  transform: scale(1.03);
+}
+
+.available-scholarships__image {
+  margin-bottom: 20px;
+}
+
+.available-scholarships__image img {
+  width: 100%;
+  height: 170px;
+  object-fit: contain;
+  object-position: center;
+}
+
+.available-scholarships__university-faculty,
+.available-scholarships__university-level {
+  color: rgba(160, 164, 168, 1);
+}
+
+.available-scholarships__university-completion-time {
+  text-align: right;
+}
+
+.available-scholarships__university-name {
+  text-align: center;
+  margin-bottom: 10px;
+}
