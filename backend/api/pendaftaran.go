@@ -2,9 +2,10 @@ package api
 
 import (
 	"encoding/json"
-	"final-project-eng2-be/repository"
 	"net/http"
 	"strconv"
+
+	"final-project-eng2-be/repository"
 )
 
 type PendaftaranListErrorResponse struct {
@@ -110,7 +111,6 @@ func (a *API) getPendaftaranByBeasiswa(w http.ResponseWriter, r *http.Request) {
 	response.Pendaftaran = pendaftaran
 	w.WriteHeader(http.StatusOK)
 	encoder.Encode(response)
-
 }
 
 func (a *API) createPendaftaran(w http.ResponseWriter, r *http.Request) {
@@ -129,7 +129,17 @@ func (a *API) createPendaftaran(w http.ResponseWriter, r *http.Request) {
 		pendaftaran.Status = "Menunggu Pengumuman"
 	}
 
-	err = a.pendaftaranRepo.CreatePendaftaran(int(pendaftaran.IdBeasiswa), int(pendaftaran.IdSiswa), pendaftaran.Status)
+	ctx := r.Context().Value("email")
+	emailSiswa := ctx.(string)
+	siswa, err := a.siswaRepo.GetSiswaByEmail(emailSiswa)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		encoder.Encode(PendaftaranListErrorResponse{Error: err.Error()})
+		return
+	}
+
+	idSiswa := siswa.Id
+	err = a.pendaftaranRepo.CreatePendaftaran(int(pendaftaran.IdBeasiswa), int(idSiswa), pendaftaran.Status)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		encoder.Encode(PendaftaranListErrorResponse{Error: err.Error()})
