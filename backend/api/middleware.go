@@ -3,8 +3,9 @@ package api
 import (
 	"context"
 	"encoding/json"
-	"github.com/dgrijalva/jwt-go"
 	"net/http"
+
+	"github.com/dgrijalva/jwt-go"
 )
 
 func (a *API) AllowOrigin(w http.ResponseWriter, r *http.Request) {
@@ -60,7 +61,7 @@ func (a *API) AuthMiddleware(next http.Handler) http.Handler {
 		}
 
 		ctx := context.WithValue(r.Context(), "email", claims.SiswaData.Email)
-		ctx = context.WithValue(r.Context(), "nama", claims.SiswaData.Nama)
+		ctx = context.WithValue(ctx, "nama", claims.SiswaData.Nama)
 		next.ServeHTTP(w, r.WithContext(ctx))
 	})
 }

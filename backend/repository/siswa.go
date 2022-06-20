@@ -73,7 +73,6 @@ func (r *SiswaRepository) GetAll() ([]Siswa, error) {
 	sqlStatement := "SELECT * FROM siswa"
 
 	rows, err := r.db.Query(sqlStatement)
-
 	if err != nil {
 		return []Siswa{}, err
 	}
@@ -86,6 +85,7 @@ func (r *SiswaRepository) GetAll() ([]Siswa, error) {
 
 	return result, nil
 }
+
 func (r *SiswaRepository) GetSiswaByID(id int) (*Siswa, error) {
 	r.mu.Lock()
 	defer r.mu.Unlock()
@@ -95,7 +95,22 @@ func (r *SiswaRepository) GetSiswaByID(id int) (*Siswa, error) {
 
 	row := r.db.QueryRow(sqlStatement, id)
 	err := row.Scan(&s.Id, &s.Nama, &s.Password, &s.Email, &s.JenjangPendidikan, &s.Nik, &s.TanggalLahir, &s.TempatLahir, &s.KotaDomisili)
+	if err != nil {
+		return nil, err
+	}
 
+	return &s, nil
+}
+
+func (r *SiswaRepository) GetSiswaByEmail(email string) (*Siswa, error) {
+	r.mu.Lock()
+	defer r.mu.Unlock()
+	var s Siswa
+
+	sqlStatement := "SELECT * FROM siswa WHERE email = ?"
+
+	row := r.db.QueryRow(sqlStatement, email)
+	err := row.Scan(&s.Id, &s.Nama, &s.Password, &s.Email, &s.JenjangPendidikan, &s.Nik, &s.TanggalLahir, &s.TempatLahir)
 	if err != nil {
 		return nil, err
 	}
