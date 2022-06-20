@@ -20,6 +20,7 @@ type Siswa struct {
 	Nik               string `db:"nik" json:"nik"`
 	TanggalLahir      string `db:"tanggal_lahir" json:"tanggal_lahir"`
 	TempatLahir       string `db:"tempat_lahir" json:"tempat_lahir"`
+	KotaDomisili      string `db:"kota_domisili" json:"kota_domisili"`
 }
 
 type Pendaftaran struct {

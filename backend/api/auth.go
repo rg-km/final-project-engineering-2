@@ -19,6 +19,7 @@ type Siswa struct {
 	Nik               string `json:"nik" validate:"required"`
 	TempatLahir       string `json:"tempat_lahir" validate:"required"`
 	TanggalLahir      string `json:"tanggal_lahir" validate:"required"`
+	KotaDomisili      string `json:"kota_domisili" validate:"required"`
 }
 
 type LoginSuccessResponse struct {
@@ -128,6 +129,7 @@ func (api *API) login(w http.ResponseWriter, r *http.Request) {
 		Nik:               res.Nik,
 		TempatLahir:       res.TempatLahir,
 		TanggalLahir:      res.TanggalLahir,
+		KotaDomisili:      res.KotaDomisili,
 	}
 	expTime := time.Now().Add(60 * time.Minute)
 	tokenString, err := api.GenerateSiswaToken(siswa, expTime)
@@ -166,7 +168,7 @@ func (api *API) register(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	res, err := api.siswaRepo.Register(s.Nama, s.Password, s.Email, s.JenjangPendidikan, s.Nik, s.TempatLahir, s.TanggalLahir)
+	res, err := api.siswaRepo.Register(s.Nama, s.Password, s.Email, s.JenjangPendidikan, s.Nik, s.TempatLahir, s.TanggalLahir, s.KotaDomisili)
 	w.Header().Set("Content-Type", "application/json")
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
@@ -183,6 +185,7 @@ func (api *API) register(w http.ResponseWriter, r *http.Request) {
 			Nik:               res.Nik,
 			TempatLahir:       res.TempatLahir,
 			TanggalLahir:      res.TanggalLahir,
+			KotaDomisili:      res.KotaDomisili,
 		},
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: expTime.Unix(),

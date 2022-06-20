@@ -24,7 +24,8 @@ func Migrate(db *sql.DB) {
 			jenjang_pendidikan TEXT,
 			nik TEXT,
 			tanggal_lahir TEXT,
-			tempat_lahir TEXT);
+			tempat_lahir TEXT,
+			kota_domisili TEXT);
 		
 		CREATE TABLE IF NOT EXISTS pendaftaran (
 			id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -47,9 +48,9 @@ func Migrate(db *sql.DB) {
 		VALUES ('Beasiswa Pertama', 'Dalam Negeri', 'S1', '2020-01-01', '2020-01-01'),
 		('Beasiswa Kedua', 'Luar Negeri', 'S1', '2020-01-01', '2020-01-01');
 		
-		INSERT INTO siswa (nama, password, email, jenjang_pendidikan, nik, tanggal_lahir, tempat_lahir)
-		VALUES ('Siswa Pertama', '12345', 'ex@gmail.com', 'S1', '123456789', '2020-01-01', 'Jakarta'),
-		('Siswa Kedua', '12345', 'contoh@gmail.com', 'S1', '123456789', '2020-01-01', 'Jakarta');`)
+		INSERT INTO siswa (nama, password, email, jenjang_pendidikan, nik, tanggal_lahir, tempat_lahir, kota_domisili)
+		VALUES ('Siswa Pertama', '12345', 'ex@gmail.com', 'S1', '123456789', '2020-01-01', 'Jakarta', 'Jakarta'),
+		('Siswa Kedua', '12345', 'contoh@gmail.com', 'S1', '123456789', '2020-01-01', 'Jakarta', 'Surabaya');`)
 
 	if err != nil {
 		panic(err)

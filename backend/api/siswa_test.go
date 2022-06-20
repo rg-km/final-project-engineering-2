@@ -68,7 +68,8 @@ var _ = Describe("Siswa testing", func() {
 					jenjang_pendidikan TEXT,
 					nik TEXT,
 					tanggal_lahir TEXT,
-					tempat_lahir TEXT);
+					tempat_lahir TEXT,
+					kota_domisili TEXT);
 				
 				CREATE TABLE IF NOT EXISTS pendaftaran (
 					id INTEGER PRIMARY KEY AUTOINCREMENT,
