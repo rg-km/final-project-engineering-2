@@ -46,6 +46,10 @@ type ValidationErrorResponse struct {
 	Error []string `json:"error"`
 }
 
+type LogoutSuccessResponse struct{
+	Message string `json:"message"`
+}
+
 var jwtKey = []byte("key")
 
 type Claims struct {
@@ -209,4 +213,16 @@ func (api *API) register(w http.ResponseWriter, r *http.Request) {
 	})
 
 	json.NewEncoder(w).Encode(RegisterSuccessResponse{Nama: res.Nama, Email: res.Email, Token: tokenString})
+}
+
+func (api *API) logout(w http.ResponseWriter, r *http.Request) {
+	api.AllowOrigin(w, r)
+	http.SetCookie(w, &http.Cookie{
+		Name:   "token",
+		Value:  "",
+		MaxAge: -1,
+	})
+
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(LogoutSuccessResponse{Message: "Logout success"})
 }
