@@ -2,6 +2,7 @@ package repository
 
 import (
 	"database/sql"
+	"fmt"
 	"sync"
 )
 
@@ -21,18 +22,18 @@ func (r *SiswaRepository) Login(email string, password string) (Siswa, error) {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 	var s Siswa
-	err := r.db.QueryRow("SELECT * FROM siswa WHERE email = ? AND password = ?", email, password).Scan(&s.Id, &s.Nama, &s.Password, &s.Email, &s.JenjangPendidikan, &s.Nik, &s.TanggalLahir, &s.TempatLahir)
+	err := r.db.QueryRow("SELECT * FROM siswa WHERE email = ? AND password = ?", email, password).Scan(&s.Id, &s.Nama, &s.Password, &s.Email, &s.JenjangPendidikan, &s.Nik, &s.TanggalLahir, &s.TempatLahir, &s.KotaDomisili)
 	if err != nil {
-		return s, err
+		return s, fmt.Errorf("invalid email or password")
 	}
 	return s, nil
 }
 
-func (r *SiswaRepository) Register(nama string, password string, email string, jenjangPendidikan string, nik string, tanggalLahir string, tempatLahir string) (Siswa, error) {
+func (r *SiswaRepository) Register(nama string, password string, email string, jenjangPendidikan string, nik string, tanggalLahir string, tempatLahir string, kotaDomisili string) (Siswa, error) {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 	var s Siswa
-	err := r.db.QueryRow("INSERT INTO siswa (nama, password, email, jenjang_pendidikan, nik, tanggal_lahir, tempat_lahir) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id, nama, password, email, jenjang_pendidikan, nik, tanggal_lahir, tempat_lahir", nama, password, email, jenjangPendidikan, nik, tanggalLahir, tempatLahir).Scan(&s.Id, &s.Nama, &s.Password, &s.Email, &s.JenjangPendidikan, &s.Nik, &s.TanggalLahir, &s.TempatLahir)
+	err := r.db.QueryRow("INSERT INTO siswa (nama, password, email, jenjang_pendidikan, nik, tanggal_lahir, tempat_lahir, kota_domisili) VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING id, nama, password, email, jenjang_pendidikan, nik, tanggal_lahir, tempat_lahir, kota_domisili", nama, password, email, jenjangPendidikan, nik, tanggalLahir, tempatLahir, kotaDomisili).Scan(&s.Id, &s.Nama, &s.Password, &s.Email, &s.JenjangPendidikan, &s.Nik, &s.TanggalLahir, &s.TempatLahir, &s.KotaDomisili)
 	if err != nil {
 		return s, err
 	}
@@ -47,7 +48,6 @@ func (r *SiswaRepository) GetAll() ([]Siswa, error) {
 	sqlStatement := "SELECT * FROM siswa"
 
 	rows, err := r.db.Query(sqlStatement)
-
 	if err != nil {
 		return []Siswa{}, err
 	}
@@ -60,6 +60,7 @@ func (r *SiswaRepository) GetAll() ([]Siswa, error) {
 
 	return result, nil
 }
+
 func (r *SiswaRepository) GetSiswaByID(id int) (*Siswa, error) {
 	r.mu.Lock()
 	defer r.mu.Unlock()
@@ -69,7 +70,6 @@ func (r *SiswaRepository) GetSiswaByID(id int) (*Siswa, error) {
 
 	row := r.db.QueryRow(sqlStatement, id)
 	err := row.Scan(&s.Id, &s.Nama, &s.Password, &s.Email, &s.JenjangPendidikan, &s.Nik, &s.TanggalLahir, &s.TempatLahir)
-
 	if err != nil {
 		return nil, err
 	}

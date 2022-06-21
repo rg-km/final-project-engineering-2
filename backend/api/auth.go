@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/go-playground/validator/v10"
@@ -12,6 +13,7 @@ import (
 )
 
 type Siswa struct {
+	Id                string `json:"id"` // untuk update
 	Email             string `json:"email" validate:"required,email"`
 	Password          string `json:"password" validate:"required"`
 	Nama              string `json:"nama" validate:"required"`
@@ -19,6 +21,7 @@ type Siswa struct {
 	Nik               string `json:"nik" validate:"required"`
 	TempatLahir       string `json:"tempat_lahir" validate:"required"`
 	TanggalLahir      string `json:"tanggal_lahir" validate:"required"`
+	KotaDomisili      string `json:"kota_domisili" validate:"required"`
 }
 
 type LoginSuccessResponse struct {
@@ -121,13 +124,16 @@ func (api *API) login(w http.ResponseWriter, r *http.Request) {
 		encoder.Encode(AuthErrorResponse{Error: err.Error()})
 		return
 	}
+	idStr := strconv.Itoa(int(res.Id))
 	siswa := Siswa{
+		Id:                idStr,
 		Nama:              res.Nama,
 		Email:             res.Email,
 		JenjangPendidikan: res.JenjangPendidikan,
 		Nik:               res.Nik,
 		TempatLahir:       res.TempatLahir,
 		TanggalLahir:      res.TanggalLahir,
+		KotaDomisili:      res.KotaDomisili,
 	}
 	expTime := time.Now().Add(60 * time.Minute)
 	tokenString, err := api.GenerateSiswaToken(siswa, expTime)
@@ -141,16 +147,18 @@ func (api *API) login(w http.ResponseWriter, r *http.Request) {
 		Value:   tokenString,
 		Expires: expTime,
 	})
-
+	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(LoginSuccessResponse{Email: res.Email, Token: tokenString})
 }
 
 func (api *API) register(w http.ResponseWriter, r *http.Request) {
 	api.AllowOrigin(w, r)
+	encoder := json.NewEncoder(w)
 	var s Siswa
 	err := json.NewDecoder(r.Body).Decode(&s)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
+		encoder.Encode(AuthErrorResponse{Error: "Failed to register"})
 		return
 	}
 
@@ -164,41 +172,20 @@ func (api *API) register(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	res, err := api.siswaRepo.Register(s.Nama, s.Password, s.Email, s.JenjangPendidikan, s.Nik, s.TempatLahir, s.TanggalLahir)
-	w.Header().Set("Content-Type", "application/json")
-	encoder := json.NewEncoder(w)
+	_, err = r.Cookie("token")
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		encoder.Encode(AuthErrorResponse{Error: err.Error()})
-		return
-	}
-	expTime := time.Now().Add(60 * time.Minute)
-	claims := &Claims{
-		// Email: res.Email,
-		SiswaData: Siswa{
-			Email:             res.Email,
-			Nama:              res.Nama,
-			JenjangPendidikan: res.JenjangPendidikan,
-			Nik:               res.Nik,
-			TempatLahir:       res.TempatLahir,
-			TanggalLahir:      res.TanggalLahir,
-		},
-		StandardClaims: jwt.StandardClaims{
-			ExpiresAt: expTime.Unix(),
-		},
-	}
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	tokenString, err := token.SignedString(jwtKey)
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		return
-	}
+		if err == http.ErrNoCookie {
+			res, err := api.siswaRepo.Register(s.Nama, s.Password, s.Email, s.JenjangPendidikan, s.Nik, s.TempatLahir, s.TanggalLahir, s.KotaDomisili)
 
-	http.SetCookie(w, &http.Cookie{
-		Name:    "token",
-		Value:   tokenString,
-		Expires: expTime,
-	})
-
-	json.NewEncoder(w).Encode(RegisterSuccessResponse{Nama: res.Nama, Email: res.Email, Token: tokenString})
+			w.Header().Set("Content-Type", "application/json")
+			if err != nil {
+				w.WriteHeader(http.StatusInternalServerError)
+				encoder.Encode(AuthErrorResponse{Error: "User already exists"})
+				return
+			}
+			json.NewEncoder(w).Encode(RegisterSuccessResponse{Nama: res.Nama, Email: res.Email})
+			return
+		}
+	}
+	w.WriteHeader(http.StatusBadRequest)
 }
