@@ -46,7 +46,7 @@ type ValidationErrorResponse struct {
 	Error []string `json:"error"`
 }
 
-type LogoutSuccessResponse struct{
+type LogoutSuccessResponse struct {
 	Message string `json:"message"`
 }
 
@@ -158,8 +158,16 @@ func (api *API) login(w http.ResponseWriter, r *http.Request) {
 func (api *API) register(w http.ResponseWriter, r *http.Request) {
 	api.AllowOrigin(w, r)
 	encoder := json.NewEncoder(w)
+
+	_, err := r.Cookie("token")
+	if err == nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		encoder.Encode(AuthErrorResponse{Error: "You already Logged in"})
+		return
+	}
+
 	var s Siswa
-	err := json.NewDecoder(r.Body).Decode(&s)
+	err = json.NewDecoder(r.Body).Decode(&s)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		encoder.Encode(AuthErrorResponse{Error: "Failed to register"})
@@ -184,9 +192,11 @@ func (api *API) register(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	expTime := time.Now().Add(60 * time.Minute)
+	idStr := strconv.Itoa(int(res.Id))
 	claims := &Claims{
 		// Email: res.Email,
 		SiswaData: Siswa{
+			Id:                idStr,
 			Email:             res.Email,
 			Nama:              res.Nama,
 			JenjangPendidikan: res.JenjangPendidikan,
