@@ -1,0 +1,19 @@
+@import '../../../styles/scss/button.scss';
+
+.input-base-style {
+  font-weight: 400;
+  font-size: 16px;
+  border-radius: 8px;
+  padding: 16px 8px;
+  width: 500px;
+  border: 1px solid $primary-color;
+}
+
+.spacing {
+  margin-top: 8px;
+}
+
+.error-text {
+  color: #f44336;
+  margin-top: 4px;
+}

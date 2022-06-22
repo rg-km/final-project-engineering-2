@@ -1,6 +1,5 @@
 import React from "react";
-import "../../../styles/core/styles.css";
-import "./styles.css";
+import "../../../styles/css/main.css";
 
 const TextInput = ({
   label,
@@ -12,10 +11,11 @@ const TextInput = ({
 }) => {
   const r = register(name);
   return (
-    <div className="row-flex">
+    <div className="row-flex spacing">
       <form>
+        <p className="lg-1">{label}</p>
         <input
-          className="input-base-style"
+          className="input-base-style md-4 spacing"
           name={r?.name}
           type={inputType}
           onBlur={r?.onBlur}
@@ -24,6 +24,7 @@ const TextInput = ({
           ref={r?.ref}
           placeholder={placeholder}
         />
+        <p className="md-4 error-text">{Boolean(errorText) && errorText}</p>
       </form>
     </div>
   );
