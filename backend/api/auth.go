@@ -36,7 +36,6 @@ type LoginSiswa struct {
 type RegisterSuccessResponse struct {
 	Nama  string `json:"nama"`
 	Email string `json:"email"`
-	Token string `json:"token"`
 }
 
 type AuthErrorResponse struct {
@@ -191,38 +190,8 @@ func (api *API) register(w http.ResponseWriter, r *http.Request) {
 		encoder.Encode(AuthErrorResponse{Error: err.Error()})
 		return
 	}
-	expTime := time.Now().Add(60 * time.Minute)
-	idStr := strconv.Itoa(int(res.Id))
-	claims := &Claims{
-		// Email: res.Email,
-		SiswaData: Siswa{
-			Id:                idStr,
-			Email:             res.Email,
-			Nama:              res.Nama,
-			JenjangPendidikan: res.JenjangPendidikan,
-			Nik:               res.Nik,
-			TempatLahir:       res.TempatLahir,
-			TanggalLahir:      res.TanggalLahir,
-			KotaDomisili:      res.KotaDomisili,
-		},
-		StandardClaims: jwt.StandardClaims{
-			ExpiresAt: expTime.Unix(),
-		},
-	}
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	tokenString, err := token.SignedString(jwtKey)
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		return
-	}
 
-	http.SetCookie(w, &http.Cookie{
-		Name:    "token",
-		Value:   tokenString,
-		Expires: expTime,
-	})
-
-	json.NewEncoder(w).Encode(RegisterSuccessResponse{Nama: res.Nama, Email: res.Email, Token: tokenString})
+	json.NewEncoder(w).Encode(RegisterSuccessResponse{Nama: res.Nama, Email: res.Email})
 }
 
 func (api *API) logout(w http.ResponseWriter, r *http.Request) {
