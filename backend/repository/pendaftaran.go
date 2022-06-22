@@ -13,7 +13,9 @@ type PendaftaranResponse struct {
 	EmailSiswa      string `json:"email_siswa"`
 	NamaBeasiswa    string `json:"nama_beasiswa"`
 	JenjangBeasiswa string `json:"jenjang_beasiswa"`
+	Deskripsi       string `json:"deskripsi"`
 	TanggalDaftar   string `json:"tanggal_daftar"`
+	Status          string `json:"status"`
 }
 
 type PendaftaranRepository struct {
@@ -42,7 +44,9 @@ func (r *PendaftaranRepository) GetPendaftaranAll() ([]PendaftaranResponse, erro
     s.email AS email_siswa,
     b.nama AS nama_beasiswa,
     b.jenjang_pendidikan AS jenjang_pendidikan,
-    p.tanggal_daftar AS tanggal_daftar
+	b.deskripsi as deskripsi,
+    p.tanggal_daftar AS tanggal_daftar,
+	p.status as status
   FROM pendaftaran p
   INNER JOIN siswa s on p.id_siswa = s.id
   INNER JOIN beasiswa b on p.id_beasiswa = b.id`
@@ -54,7 +58,7 @@ func (r *PendaftaranRepository) GetPendaftaranAll() ([]PendaftaranResponse, erro
 
 	for rows.Next() {
 		var p PendaftaranResponse
-		rows.Scan(&p.ID, &p.IdSiswa, &p.IdBeasiswa, &p.NamaSiswa, &p.EmailSiswa, &p.NamaBeasiswa, &p.JenjangBeasiswa, &p.TanggalDaftar)
+		rows.Scan(&p.ID, &p.IdSiswa, &p.IdBeasiswa, &p.NamaSiswa, &p.EmailSiswa, &p.NamaBeasiswa, &p.JenjangBeasiswa, &p.Deskripsi, &p.TanggalDaftar, &p.Status)
 		result = append(result, p)
 	}
 	return result, nil
@@ -74,11 +78,13 @@ func (r *PendaftaranRepository) GetPendaftaranById(id int) (PendaftaranResponse,
     s.email AS email_siswa,
     b.nama AS nama_beasiswa,
     b.jenjang_pendidikan AS jenjang_pendidikan,
-    p.tanggal_daftar AS tanggal_daftar
+	b.deskripsi as deskripsi,
+    p.tanggal_daftar AS tanggal_daftar,
+	p.status as status
   FROM pendaftaran p
   INNER JOIN siswa s on p.id_siswa = s.id
   INNER JOIN beasiswa b on p.id_beasiswa = b.id
-  WHERE p.id = ?`, id).Scan(&p.ID, &p.IdSiswa, &p.IdBeasiswa, &p.NamaSiswa, &p.EmailSiswa, &p.NamaBeasiswa, &p.JenjangBeasiswa, &p.TanggalDaftar)
+  WHERE p.id = ?`, id).Scan(&p.ID, &p.IdSiswa, &p.IdBeasiswa, &p.NamaSiswa, &p.EmailSiswa, &p.NamaBeasiswa, &p.JenjangBeasiswa, &p.Deskripsi, &p.TanggalDaftar, &p.Status)
 	if err != nil {
 		return p, err
 	}
@@ -99,7 +105,9 @@ func (r *PendaftaranRepository) GetBySiswa(idSiswa int) ([]PendaftaranResponse, 
     s.email AS email_siswa,
     b.nama AS nama_beasiswa,
     b.jenjang_pendidikan AS jenjang_pendidikan,
-    p.tanggal_daftar AS tanggal_daftar
+	b.deskripsi as deskripsi,
+    p.tanggal_daftar AS tanggal_daftar,
+	p.status as status
   FROM pendaftaran p
   INNER JOIN siswa s on p.id_siswa = s.id
   INNER JOIN beasiswa b on p.id_beasiswa = b.id
@@ -112,7 +120,7 @@ func (r *PendaftaranRepository) GetBySiswa(idSiswa int) ([]PendaftaranResponse, 
 
 	for rows.Next() {
 		var p PendaftaranResponse
-		rows.Scan(&p.ID, &p.IdSiswa, &p.IdBeasiswa, &p.NamaSiswa, &p.EmailSiswa, &p.NamaBeasiswa, &p.JenjangBeasiswa, &p.TanggalDaftar)
+		rows.Scan(&p.ID, &p.IdSiswa, &p.IdBeasiswa, &p.NamaSiswa, &p.EmailSiswa, &p.NamaBeasiswa, &p.JenjangBeasiswa, &p.Deskripsi, &p.TanggalDaftar, &p.Status)
 		result = append(result, p)
 	}
 	return result, nil
@@ -132,7 +140,9 @@ func (r *PendaftaranRepository) GetByBeasiswa(idBeasiswa int) ([]PendaftaranResp
     s.email AS email_siswa,
     b.nama AS nama_beasiswa,
     b.jenjang_pendidikan AS jenjang_pendidikan,
-    p.tanggal_daftar AS tanggal_daftar
+	b.deskripsi as deskripsi,
+    p.tanggal_daftar AS tanggal_daftar,
+	p.status as status
   FROM pendaftaran p
   INNER JOIN siswa s on p.id_siswa = s.id
   INNER JOIN beasiswa b on p.id_beasiswa = b.id
@@ -145,7 +155,7 @@ func (r *PendaftaranRepository) GetByBeasiswa(idBeasiswa int) ([]PendaftaranResp
 
 	for rows.Next() {
 		var p PendaftaranResponse
-		rows.Scan(&p.ID, &p.IdSiswa, &p.IdBeasiswa, &p.NamaSiswa, &p.EmailSiswa, &p.NamaBeasiswa, &p.JenjangBeasiswa, &p.TanggalDaftar)
+		rows.Scan(&p.ID, &p.IdSiswa, &p.IdBeasiswa, &p.NamaSiswa, &p.EmailSiswa, &p.NamaBeasiswa, &p.JenjangBeasiswa, &p.Deskripsi, &p.TanggalDaftar, &p.Status)
 		result = append(result, p)
 	}
 	return result, nil

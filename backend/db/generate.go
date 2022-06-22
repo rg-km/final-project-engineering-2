@@ -14,7 +14,8 @@ func Migrate(db *sql.DB) {
 		jenis_beasiswa TEXT,
 		jenjang_pendidikan TEXT,
 		tanggal_mulai TEXT,
-		tanggal_selesai TEXT);
+		tanggal_selesai TEXT,
+		deskripsi TEXT);
 		
 		CREATE TABLE IF NOT EXISTS siswa (
 			id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -44,9 +45,9 @@ func Migrate(db *sql.DB) {
 			no_telp TEXT,
 			legalitas TEXT);
 			
-		INSERT INTO beasiswa (nama, jenis_beasiswa, jenjang_pendidikan, tanggal_mulai, tanggal_selesai)
-		VALUES ('Beasiswa Pertama', 'Dalam Negeri', 'S1', '2020-01-01', '2020-01-01'),
-		('Beasiswa Kedua', 'Luar Negeri', 'S1', '2020-01-01', '2020-01-01');
+		INSERT INTO beasiswa (nama, jenis_beasiswa, jenjang_pendidikan, tanggal_mulai, tanggal_selesai, deskripsi)
+		VALUES ('Beasiswa Pertama', 'Dalam Negeri', 'S1', '2020-01-01', '2020-01-01','Beasiswa ini adalah beasiswa pertama'),
+		('Beasiswa Kedua', 'Luar Negeri', 'S1', '2020-01-01', '2020-01-01', 'Beasiswa ini adalah beasiswa kedua');
 		
 		INSERT INTO siswa (nama, password, email, jenjang_pendidikan, nik, tanggal_lahir, tempat_lahir, kota_domisili)
 		VALUES ('Siswa Pertama', '12345', 'ex@gmail.com', 'S1', '123456789', '2020-01-01', 'Jakarta', 'Jakarta'),

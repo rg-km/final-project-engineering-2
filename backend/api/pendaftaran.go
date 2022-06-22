@@ -178,5 +178,5 @@ func (a *API) updatePendaftaran(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusOK)
 	w.Header().Set("Content-Type", "application/json")
-	encoder.Encode(PendaftaranSuccessfulResponse{Msg: "Successful"})
+	encoder.Encode(PendaftaranSuccessfulResponse{Msg: "Successful", Status: pendaftaran.Status})
 }

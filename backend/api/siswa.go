@@ -15,7 +15,18 @@ type SiswaErrorResponse struct {
 	Error string `json:"error"`
 }
 type SiswaSuccessfulResponse struct {
-	Msg string `json:"msg"`
+	Siswa []ListSiswa `json:"siswa"`
+}
+
+type ListSiswa struct {
+	Id                string `json:"id"`
+	Nama              string `json:"nama"`
+	Email             string `json:"email"`
+	JenjangPendidikan string `json:"jenjang_pendidikan"`
+	Nik 			  string `json:"nik"`
+	TanggalLahir      string `json:"tanggal_lahir"`
+	TempatLahir       string `json:"tempat_lahir"`
+	KotaDomisili 	  string `json:"kota_domisili"`
 }
 
 func (a *API) getSiswaFromToken(tokenStr string) (*Siswa, error) {
@@ -77,6 +88,7 @@ func (a *API) UpdateSiswa(w http.ResponseWriter, r *http.Request) {
 		TanggalLahir:      siswaInput.TanggalLahir,
 		TempatLahir:       siswaInput.TempatLahir,
 		JenjangPendidikan: siswaInput.JenjangPendidikan,
+		Nik: 			   siswaInput.Nik,
 		KotaDomisili:      siswaInput.KotaDomisili,
 	}
 
@@ -98,6 +110,9 @@ func (a *API) UpdateSiswa(w http.ResponseWriter, r *http.Request) {
 	if siswaInput.KotaDomisili == "" {
 		siswaNew.KotaDomisili = siswaCurrent.KotaDomisili
 	}
+	if siswaInput.Nik == "" {
+		siswaNew.Nik = siswaCurrent.Nik
+	}
 	err = a.siswaRepo.UpdateSiswa(siswaNew)
 
 	if err != nil {
@@ -106,10 +121,7 @@ func (a *API) UpdateSiswa(w http.ResponseWriter, r *http.Request) {
 	}
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(SiswaSuccessfulResponse{
-		Msg: "Successful",
-	})
-	return
+	encoder.Encode(siswaNew)
 }
 
 func (a *API) GetSiswaByToken(w http.ResponseWriter, r *http.Request) {
@@ -164,7 +176,10 @@ func (a *API) GetSiswaByToken(w http.ResponseWriter, r *http.Request) {
 func (a *API) GetAllSiswa(w http.ResponseWriter, r *http.Request) {
 
 	a.AllowOrigin(w, r)
-	result, err := a.siswaRepo.GetAll()
+	w.Header().Set("Content-Type", "application/json")
+	response := SiswaSuccessfulResponse{}
+	response.Siswa = make([]ListSiswa, 0)
+	siswa, err := a.siswaRepo.GetAll()
 	encoder := json.NewEncoder(w)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
@@ -172,18 +187,27 @@ func (a *API) GetAllSiswa(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	response, err := json.Marshal(result)
-
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		encoder.Encode(SiswaErrorResponse{Error: "Internal server error"})
 		return
 	}
 
+	for _, s := range siswa {
+		response.Siswa = append(response.Siswa, ListSiswa{
+			Id:                strconv.Itoa(int(s.Id)),
+			Nama:              s.Nama,
+			Nik: 			   s.Nik,
+			Email:             s.Email,
+			TanggalLahir:      s.TanggalLahir,
+			TempatLahir:       s.TempatLahir,
+			JenjangPendidikan: s.JenjangPendidikan,
+			KotaDomisili:      s.KotaDomisili,
+		})
+	}
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
-	w.Write(response)
-	return
+	encoder.Encode(response)
 }
 
 func (a *API) GetSiswaByID(w http.ResponseWriter, r *http.Request) {
@@ -191,6 +215,8 @@ func (a *API) GetSiswaByID(w http.ResponseWriter, r *http.Request) {
 	a.AllowOrigin(w, r)
 	id, err := strconv.Atoi(r.URL.Query().Get("id"))
 	encoder := json.NewEncoder(w)
+	response := SiswaSuccessfulResponse{}
+	response.Siswa = make([]ListSiswa, 0)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		w.Header().Set("Content-Type", "application/json")
@@ -206,8 +232,19 @@ func (a *API) GetSiswaByID(w http.ResponseWriter, r *http.Request) {
 		encoder.Encode(SiswaErrorResponse{Error: fmt.Sprintf("No siswa with id = %d", id)})
 		return
 	}
+
+	response.Siswa = append(response.Siswa, ListSiswa{
+		Id:                strconv.Itoa(int(res.Id)),
+		Nama:              res.Nama,
+		Nik: 			   res.Nik,
+		Email:             res.Email,
+		TanggalLahir:      res.TanggalLahir,
+		TempatLahir:       res.TempatLahir,
+		JenjangPendidikan: res.JenjangPendidikan,
+		KotaDomisili:      res.KotaDomisili,
+	})
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
-	encoder.Encode(res)
+	encoder.Encode(response)
 	return
 }
