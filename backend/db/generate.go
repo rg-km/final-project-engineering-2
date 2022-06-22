@@ -47,11 +47,21 @@ func Migrate(db *sql.DB) {
 			
 		INSERT INTO beasiswa (nama, jenis_beasiswa, jenjang_pendidikan, tanggal_mulai, tanggal_selesai, deskripsi)
 		VALUES ('Beasiswa Pertama', 'Dalam Negeri', 'S1', '2020-01-01', '2020-01-01','Beasiswa ini adalah beasiswa pertama'),
-		('Beasiswa Kedua', 'Luar Negeri', 'S1', '2020-01-01', '2020-01-01', 'Beasiswa ini adalah beasiswa kedua');
+		('Beasiswa Kedua', 'Luar Negeri', 'S1', '2020-01-01', '2020-01-01', 'Beasiswa ini adalah beasiswa kedua'),
+    ('Beasiswa Ketiga', 'Dalam Negeri', 'S2', '2019-02-20', '2020-05-20', 'Beasiswa ini adalah beasiswa ketiga'),
+    ('Beasiswa Keempat', 'Luar Negeri', 'S1', '2020-05-02', '2020-06-02', 'Beasiswa ini adalah beasiswa keempat'),
+    ('Beasiswa ke-5', 'Dalam Negeri', 'S2', '2020-03-01', '2020-07-05', 'Beasiswa ini adalah beasiswa ke-5'),
+    ('Beasiswa ke-6', 'Dalam Negeri', 'S1', '2020-03-01', '2020-07-05', 'Beasiswa ini adalah beasiswa ke-6'),
+    ('Beasiswa ke-7', 'Luar Negeri', 'S2', '2020-04-01', '2020-08-01', 'Beasiswa ini adalah beasiswa ke-7'),
+    ('Beasiswa ke-8', 'Dalam Negeri', 'S2', '2019-08-13', '2019-10-13', 'Beasiswa ini adalah beasiswa ke-8');
 		
 		INSERT INTO siswa (nama, password, email, jenjang_pendidikan, nik, tanggal_lahir, tempat_lahir, kota_domisili)
 		VALUES ('Siswa Pertama', '12345', 'ex@gmail.com', 'S1', '123456789', '2020-01-01', 'Jakarta', 'Jakarta'),
-		('Siswa Kedua', '12345', 'contoh@gmail.com', 'S1', '123456789', '2020-01-01', 'Jakarta', 'Surabaya');`)
+		('Siswa Kedua', '12345', 'contoh@gmail.com', 'S1', '123456789', '2020-01-01', 'Jakarta', 'Surabaya'),
+    ('Siswa Ke-3', '12345', 'c@gmail.com', 'S1', '1234568', '2020-01-01', 'Jakarta', 'Bandung'),
+    ('Siswa Ke-4', '12345', 'ch@gmail.com', 'S1', '1234589', '2020-01-01', 'Jakarta', 'Surabaya'),
+    ('Siswa Ke-5', '12345', 'coth@gmail.com', 'S1', '456789', '2020-01-01', 'Jakarta', 'Surabaya'),
+    ('Siswa Ke-6', '1294', 'coh@gmail.com', 'S1', '123456789', '2020-01-01', 'Jakarta', 'Surabaya');`)
 
 	if err != nil {
 		panic(err)
