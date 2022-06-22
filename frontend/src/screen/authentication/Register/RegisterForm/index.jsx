@@ -6,6 +6,8 @@ import { useNavigate } from "react-router-dom";
 import ENV from "../../../../.env";
 import Form from "../../../../components/data-entry/Form";
 import "../../../../styles/css/main.css";
+import { yupResolver } from "@hookform/resolvers/yup";
+import registerValidation from "../../../../data/form-valiation/register";
 
 const RegisterForm = () => {
   const navigate = useNavigate();
@@ -17,7 +19,18 @@ const RegisterForm = () => {
     control,
     formState: { errors },
     handleSubmit,
-  } = useForm();
+  } = useForm({
+    resolver: yupResolver(registerValidation),
+    defaultValues: {
+      email: "",
+      nama: "",
+      password: "",
+      jenjang_pendidikan: "",
+      nik: "",
+      tempat_lahir: "",
+      tanggal_lahir: "",
+    },
+  });
 
   const submit = (value) => {
     setLoading(true);

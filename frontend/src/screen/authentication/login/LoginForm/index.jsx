@@ -7,6 +7,8 @@ import useAuth from "../../../../hooks/useAuth";
 import "../../../../styles/css/main.css";
 import { useState } from "react";
 import { Spinner, useToast } from "@chakra-ui/react";
+import { yupResolver } from "@hookform/resolvers/yup";
+import emailLoginValidation from "../../../../data/form-valiation/email-login";
 
 const LoginForm = () => {
   const navigate = useNavigate();
@@ -18,7 +20,10 @@ const LoginForm = () => {
     control,
     formState: { errors },
     handleSubmit,
-  } = useForm({});
+  } = useForm({
+    resolver: yupResolver(emailLoginValidation),
+    defaultValues: { email: "", password: "" },
+  });
 
   const setAuthToken = useAuth((state) => state.setAuthToken);
 
