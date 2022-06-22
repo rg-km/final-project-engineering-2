@@ -10,6 +10,7 @@ type Beasiswa struct {
 	TanggalMulai      string `db:"tanggal_mulai" json:"tanggal_mulai"`
 	TanggalSelesai    string `db:"tanggal_selesai" json:"tanggal_selesai"`
 	Deskripsi         string `db:"deskripsi" json:"deskripsi"`
+	LamaProgram       string `db:"lama_program" json:"lama_program"`
 }
 
 type Siswa struct {
