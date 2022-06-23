@@ -1,0 +1,19 @@
+/* @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@500&display=swap'); */
+
+.footer__container {
+    background-color: rgba(255, 255, 255, 1);
+    border-top: 1px solid rgba(0, 0, 0, .1);
+    padding: 10px;
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    left: 0;
+  }
+  
+  .footer__title {
+    color: rgba(114, 220, 243, 1);
+    font-weight: bolder;
+    text-align: center;
+    font-family: "Quicksand", sans-serif;
+  }
+  
