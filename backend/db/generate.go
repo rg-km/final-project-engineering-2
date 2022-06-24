@@ -57,10 +57,10 @@ func Migrate(db *sql.DB) {
     ('Beasiswa Ketujuh', 'Dalam Negeri', 'S2', 'Seni Rupa & Terapan', '2020-01-01', '2020-01-01', 'Beasiswa ini adalah beasiswa ketujuh', '2 Tahun', 'https://upload.wikimedia.org/wikipedia/commons/5/51/Logo_of_Universitas_Negeri_Semarang.jpg'),
     ('Beasiswa Kelima', 'Luar Negeri', 'S2', 'Ilmu Sosial', '2020-01-01', '2020-01-01', 'Beasiswa ini adalah beasiswa kelima', '2 Tahun', 'https://upload.wikimedia.org/wikipedia/en/thumb/b/b7/Stanford_University_seal_2003.svg/1200px-Stanford_University_seal_2003.svg.png'),
     ('Beasiswa Keenam', 'Luar Negeri', 'S1', 'Ilmu Komputer', '2020-01-01', '2020-01-01', 'Beasiswa ini adalah beasiswa keenam', '2 Tahun', 'https://upload.wikimedia.org/wikipedia/en/thumb/b/b7/Stanford_University_seal_2003.svg/1200px-Stanford_University_seal_2003.svg.png'),
-	('Beasiswa Ketujuh', 'Dalam Negeri', 'S1', 'Manajemen Keuangan', '2020-01-01', '2020-01-01', 'Beasiswa ini adalah beasiswa ketujuh, '2 Tahun', 'https://www.bi.go.id/id/SiteAssets/bi-b.png'),
-    ('Beasiswa Kedelapan', 'Dalam Negeri', 'S1', 'Teknik Informatika', '2020-01-01', '2020-01-01', 'Beasiswa ini adalah beasiswa kedelapan, '2 Tahun', 'https://1000logos.net/wp-content/uploads/2020/06/Pertamina-Logo.png'),
-    ('Beasiswa Kesembilan', 'Dalam Negeri', 'S1', 'Manajemen Keuangan', '2020-01-01', '2020-01-01', 'Beasiswa ini adalah beasiswa kesembilan, '2 Tahun', 'https://infobanknews.com/wp-content/uploads/2018/05/logo-BNI-46-1.png'),
-    ('Beasiswa Kesepuluh', 'Dalam Negeri', 'S1', 'Sistem Informasi', '2020-01-01', '2020-01-01', 'Beasiswa ini adalah beasiswa kesepuluh, '2 Tahun', 'https://www.dicoding.com/blog/wp-content/uploads/2014/12/dicoding-header-logo.png');
+	('Beasiswa Ketujuh', 'Dalam Negeri', 'S1', 'Manajemen Keuangan', '2020-01-01', '2020-01-01', 'Beasiswa ini adalah beasiswa ketujuh', '2 Tahun', 'https://www.bi.go.id/id/SiteAssets/bi-b.png'),
+    ('Beasiswa Kedelapan', 'Dalam Negeri', 'S1', 'Teknik Informatika', '2020-01-01', '2020-01-01', 'Beasiswa ini adalah beasiswa kedelapan', '2 Tahun', 'https://1000logos.net/wp-content/uploads/2020/06/Pertamina-Logo.png'),
+    ('Beasiswa Kesembilan', 'Dalam Negeri', 'S1', 'Manajemen Keuangan', '2020-01-01', '2020-01-01', 'Beasiswa ini adalah beasiswa kesembilan', '2 Tahun', 'https://infobanknews.com/wp-content/uploads/2018/05/logo-BNI-46-1.png'),
+    ('Beasiswa Kesepuluh', 'Dalam Negeri', 'S1', 'Sistem Informasi', '2020-01-01', '2020-01-01', 'Beasiswa ini adalah beasiswa kesepuluh', '2 Tahun', 'https://www.dicoding.com/blog/wp-content/uploads/2014/12/dicoding-header-logo.png');
 
 	INSERT INTO siswa (nama, password, email, jenjang_pendidikan, nik, tanggal_lahir, tempat_lahir, kota_domisili) VALUES
 	('Siswa Pertama', '12345', 'ex@gmail.com', 'S1', '123456789', '2020-01-01', 'Jakarta', 'Jakarta'),
