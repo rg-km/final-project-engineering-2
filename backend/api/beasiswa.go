@@ -15,10 +15,12 @@ type ListBeasiswa struct {
 	Nama              string `json:"nama"`
 	JenisBeasiswa     string `json:"jenis_beasiswa"`
 	JenjangPendidikan string `json:"jenjang_pendidikan"`
+	ProgramPendidikan string `json:"program_pendidikan"`
 	TanggalMulai      string `json:"tanggal_mulai"`
 	TanggalSelesai    string `json:"tanggal_selesai"`
 	Deskripsi         string `json:"deskripsi"`
 	LamaProgram       string `json:"lama_program"`
+	UrlGambar         string `json:"url_gambar"`
 }
 
 type BeasiswaListSuccessResponse struct {
@@ -48,10 +50,12 @@ func (a *API) getBeasiswa(w http.ResponseWriter, r *http.Request) {
 			Nama:              b.Nama,
 			JenisBeasiswa:     b.JenisBeasiswa,
 			JenjangPendidikan: b.JenjangPendidikan,
+			ProgramPendidikan: b.ProgramPendidikan,
 			TanggalMulai:      b.TanggalMulai,
 			TanggalSelesai:    b.TanggalSelesai,
 			Deskripsi:         b.Deskripsi,
 			LamaProgram:       b.LamaProgram,
+			UrlGambar:         b.UrlGambar,
 		})
 	}
 
@@ -83,10 +87,12 @@ func (a *API) getBeasiswaById(w http.ResponseWriter, r *http.Request) {
 		Nama:              beasiswa.Nama,
 		JenisBeasiswa:     beasiswa.JenisBeasiswa,
 		JenjangPendidikan: beasiswa.JenjangPendidikan,
+		ProgramPendidikan: beasiswa.ProgramPendidikan,
 		TanggalMulai:      beasiswa.TanggalMulai,
 		TanggalSelesai:    beasiswa.TanggalSelesai,
 		Deskripsi:         beasiswa.Deskripsi,
 		LamaProgram:       beasiswa.LamaProgram,
+		UrlGambar:         beasiswa.UrlGambar,
 	})
 	encoder.Encode(response)
 }

@@ -27,7 +27,7 @@ func (r *BeasiswaRepository) GetAll() ([]Beasiswa, error) {
 
 	for rows.Next() {
 		var b Beasiswa
-		err := rows.Scan(&b.Id, &b.Nama, &b.JenisBeasiswa, &b.JenjangPendidikan, &b.TanggalMulai, &b.TanggalSelesai, &b.Deskripsi, &b.LamaProgram)
+		err := rows.Scan(&b.Id, &b.Nama, &b.JenisBeasiswa, &b.JenjangPendidikan, &b.ProgramPendidikan, &b.TanggalMulai, &b.TanggalSelesai, &b.Deskripsi, &b.LamaProgram, &b.UrlGambar)
 		if err != nil {
 			return nil, err
 		}
@@ -40,7 +40,7 @@ func (r *BeasiswaRepository) GetById(id int64) (Beasiswa, error) {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 	var b Beasiswa
-	err := r.db.QueryRow("SELECT * FROM beasiswa WHERE id = ?", id).Scan(&b.Id, &b.Nama, &b.JenisBeasiswa, &b.JenjangPendidikan, &b.TanggalMulai, &b.TanggalSelesai, &b.Deskripsi, &b.LamaProgram)
+	err := r.db.QueryRow("SELECT * FROM beasiswa WHERE id = ?", id).Scan(&b.Id, &b.Nama, &b.JenisBeasiswa, &b.JenjangPendidikan, &b.ProgramPendidikan, &b.TanggalMulai, &b.TanggalSelesai, &b.Deskripsi, &b.LamaProgram, &b.UrlGambar)
 	if err != nil {
 		return b, err
 	}

@@ -6,11 +6,13 @@ type Beasiswa struct {
 	Password          string `db:"password" json:"password"`
 	Email             string `db:"email" json:"email"`
 	JenisBeasiswa     string `db:"jenis_beasiswa" json:"jenis_beasiswa"`
+	ProgramPendidikan string `db:"program_pendidikan" json:"program_pendidikan"`
 	JenjangPendidikan string `db:"jenjang_pendidikan" json:"jenjang_pendidikan"`
 	TanggalMulai      string `db:"tanggal_mulai" json:"tanggal_mulai"`
 	TanggalSelesai    string `db:"tanggal_selesai" json:"tanggal_selesai"`
 	Deskripsi         string `db:"deskripsi" json:"deskripsi"`
 	LamaProgram       string `db:"lama_program" json:"lama_program"`
+	UrlGambar         string `db:"url_gambar" json:"url_gmabar"`
 }
 
 type Siswa struct {
