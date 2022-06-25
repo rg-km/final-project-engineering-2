@@ -3,7 +3,10 @@ package api
 import (
 	"context"
 	"encoding/json"
+	"fmt"
+	"log"
 	"net/http"
+	"strings"
 
 	"github.com/dgrijalva/jwt-go"
 )
@@ -22,47 +25,43 @@ func (a *API) AllowOrigin(w http.ResponseWriter, r *http.Request) {
 
 func (a *API) AuthMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		a.AllowOrigin(w, r)
 		encoder := json.NewEncoder(w)
-
-		c, err := r.Cookie("token")
-		if err != nil {
-			if err == http.ErrNoCookie {
-				w.WriteHeader(http.StatusUnauthorized)
-				encoder.Encode(AuthErrorResponse{Error: err.Error()})
-				return
-			}
+		authorizationHeader := r.Header.Get("Authorization")
+		if !strings.Contains(authorizationHeader, "Bearer") {
 			w.WriteHeader(http.StatusBadRequest)
-			encoder.Encode(AuthErrorResponse{Error: err.Error()})
-			return
-		}
-		tknStr := c.Value
-
-		claims := &Claims{}
-
-		tkn, err := jwt.ParseWithClaims(tknStr, claims, func(token *jwt.Token) (interface{}, error) {
-			return jwtKey, nil
-		})
-		if err != nil {
-			if err == jwt.ErrSignatureInvalid {
-				w.WriteHeader(http.StatusUnauthorized)
-				encoder.Encode(AuthErrorResponse{Error: err.Error()})
-				return
-			}
-			w.WriteHeader(http.StatusBadRequest)
-			encoder.Encode(AuthErrorResponse{Error: err.Error()})
-			return
-		}
-
-		if !tkn.Valid {
-			w.WriteHeader(http.StatusUnauthorized)
+			log.Println(authorizationHeader)
 			encoder.Encode(AuthErrorResponse{Error: "Invalid Token"})
 			return
 		}
 
-		ctx := context.WithValue(r.Context(), "email", claims.SiswaData.Email)
-		ctx = context.WithValue(ctx, "nama", claims.SiswaData.Nama)
-		next.ServeHTTP(w, r.WithContext(ctx))
+		tokenString := strings.Replace(authorizationHeader, "Bearer ", "", -1)
+
+		siswaClaims := Claims{}
+		token, err := jwt.ParseWithClaims(tokenString, &siswaClaims, func(token *jwt.Token) (interface{}, error) {
+			if method, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+				return nil, fmt.Errorf("signing method invalid")
+			} else if method != jwt.SigningMethodHS256 {
+				return nil, fmt.Errorf("signing method invalid")
+			}
+
+			return jwtKey, nil
+		})
+		if err != nil {
+			w.WriteHeader(http.StatusUnauthorized)
+			encoder.Encode(AuthErrorResponse{Error: err.Error()})
+			return
+		}
+		if !token.Valid {
+			w.WriteHeader(http.StatusUnauthorized)
+			encoder.Encode(AuthErrorResponse{Error: "Invalid Token"})
+			return
+		}
+		siswaData := siswaClaims.SiswaData
+		fmt.Println(siswaData)
+		ctx := context.WithValue(context.Background(), "siswa_data", siswaData)
+		r = r.WithContext(ctx)
+
+		next.ServeHTTP(w, r)
 	})
 }
 
