@@ -144,7 +144,7 @@ func (api *API) login(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
-
+	bearer := "Bearer " + tokenString
 	http.SetCookie(w, &http.Cookie{
 		Name:    "token",
 		Value:   tokenString,
