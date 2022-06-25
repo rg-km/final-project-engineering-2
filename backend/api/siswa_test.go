@@ -30,7 +30,8 @@ var _ = Describe("Siswa testing", func() {
 			r := httptest.NewRequest("GET", "/api/siswa/all", nil)
 			beasiswaRepo := repository.NewBeasiswaRepository(db)
 			siswaRepo := repository.NewSiswaRepository(db)
-			api := NewApi(*siswaRepo, *beasiswaRepo)
+			pendaftaranRepo := repository.NewPendaftaranRepository(db)
+			api := NewApi(*siswaRepo, *beasiswaRepo, *pendaftaranRepo)
 			api.GetAllSiswa(w, r)
 
 			res := w.Result()
@@ -57,7 +58,8 @@ var _ = Describe("Siswa testing", func() {
 				jenis_beasiswa TEXT,
 				jenjang_pendidikan TEXT,
 				tanggal_mulai TEXT,
-				tanggal_selesai TEXT);
+				tanggal_selesai TEXT,
+				deskripsi TEXT);
 				
 				CREATE TABLE IF NOT EXISTS siswa (
 					id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -67,7 +69,8 @@ var _ = Describe("Siswa testing", func() {
 					jenjang_pendidikan TEXT,
 					nik TEXT,
 					tanggal_lahir TEXT,
-					tempat_lahir TEXT);
+					tempat_lahir TEXT,
+					kota_domisili TEXT);
 				
 				CREATE TABLE IF NOT EXISTS pendaftaran (
 					id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -87,7 +90,8 @@ var _ = Describe("Siswa testing", func() {
 			r := httptest.NewRequest("GET", "/api/siswa/all", nil)
 			beasiswaRepo := repository.NewBeasiswaRepository(db)
 			siswaRepo := repository.NewSiswaRepository(db)
-			api := NewApi(*siswaRepo, *beasiswaRepo)
+			pendaftaranRepo := repository.NewPendaftaranRepository(db)
+			api := NewApi(*siswaRepo, *beasiswaRepo, *pendaftaranRepo)
 			api.GetAllSiswa(w, r)
 
 			res := w.Result()
@@ -113,7 +117,8 @@ var _ = Describe("Siswa testing", func() {
 			r := httptest.NewRequest("GET", `/api/siswa?id=1`, nil)
 			siswaRepo := repository.NewSiswaRepository(db)
 			beasiswaRepo := repository.NewBeasiswaRepository(db)
-			api := NewApi(*siswaRepo, *beasiswaRepo)
+			pendaftaranRepo := repository.NewPendaftaranRepository(db)
+			api := NewApi(*siswaRepo, *beasiswaRepo, *pendaftaranRepo)
 
 			api.GetSiswaByID(w, r)
 			result := w.Result()
@@ -138,7 +143,8 @@ var _ = Describe("Siswa testing", func() {
 			r := httptest.NewRequest("GET", `/api/siswa?id=3`, nil)
 			siswaRepo := repository.NewSiswaRepository(db)
 			beasiswaRepo := repository.NewBeasiswaRepository(db)
-			api := NewApi(*siswaRepo, *beasiswaRepo)
+			pendaftaranRepo := repository.NewPendaftaranRepository(db)
+			api := NewApi(*siswaRepo, *beasiswaRepo, *pendaftaranRepo)
 
 			api.GetSiswaByID(w, r)
 			result := w.Result()

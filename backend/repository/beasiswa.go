@@ -1,16 +1,22 @@
 package repository
 
-import "database/sql"
+import (
+	"database/sql"
+	"sync"
+)
 
 type BeasiswaRepository struct {
+	mu *sync.Mutex
 	db *sql.DB
 }
 
 func NewBeasiswaRepository(db *sql.DB) *BeasiswaRepository {
-	return &BeasiswaRepository{db: db}
+	return &BeasiswaRepository{db: db, mu: &sync.Mutex{}}
 }
 
 func (r *BeasiswaRepository) GetAll() ([]Beasiswa, error) {
+	r.mu.Lock()
+	defer r.mu.Unlock()
 	var beasiswa []Beasiswa
 
 	rows, err := r.db.Query("SELECT * FROM beasiswa")
@@ -21,7 +27,7 @@ func (r *BeasiswaRepository) GetAll() ([]Beasiswa, error) {
 
 	for rows.Next() {
 		var b Beasiswa
-		err := rows.Scan(&b.Id, &b.Nama, &b.JenisBeasiswa, &b.JenjangPendidikan, &b.TanggalMulai, &b.TanggalSelesai)
+		err := rows.Scan(&b.Id, &b.Nama, &b.JenisBeasiswa, &b.JenjangPendidikan, &b.TanggalMulai, &b.TanggalSelesai, &b.Deskripsi, &b.LamaProgram)
 		if err != nil {
 			return nil, err
 		}
@@ -31,8 +37,10 @@ func (r *BeasiswaRepository) GetAll() ([]Beasiswa, error) {
 }
 
 func (r *BeasiswaRepository) GetById(id int64) (Beasiswa, error) {
+	r.mu.Lock()
+	defer r.mu.Unlock()
 	var b Beasiswa
-	err := r.db.QueryRow("SELECT * FROM beasiswa WHERE id = ?", id).Scan(&b.Id, &b.Nama, &b.JenisBeasiswa, &b.JenjangPendidikan, &b.TanggalMulai, &b.TanggalSelesai)
+	err := r.db.QueryRow("SELECT * FROM beasiswa WHERE id = ?", id).Scan(&b.Id, &b.Nama, &b.JenisBeasiswa, &b.JenjangPendidikan, &b.TanggalMulai, &b.TanggalSelesai, &b.Deskripsi, &b.LamaProgram)
 	if err != nil {
 		return b, err
 	}
