@@ -3,6 +3,7 @@ import { Route, Routes } from "react-router-dom";
 import Header from "./components/Header";
 import Login from "./screen/authentication/login";
 import Register from "./screen/authentication/Register";
+import Footer from "./components/Footer/index";
 
 const App = () => {
   return (
@@ -14,6 +15,7 @@ const App = () => {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
         </Routes>
+        <Footer />
       </div>
     </BrowserRouter>
   );

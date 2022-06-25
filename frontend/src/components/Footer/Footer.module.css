@@ -3,7 +3,7 @@
 .footer__container {
     background-color: rgba(255, 255, 255, 1);
     border-top: 1px solid rgba(0, 0, 0, .1);
-    padding: 10px;
+    padding: 20px;
     position: fixed;
     bottom: 0;
     right: 0;
@@ -11,7 +11,7 @@
   }
   
   .footer__title {
-    color: rgba(114, 220, 243, 1);
+    color: rgba(28, 37, 96, 1);
     font-weight: bolder;
     text-align: center;
     font-family: "Quicksand", sans-serif;
