@@ -5,10 +5,8 @@ import ScholarshipsItem from "../ScholarshipItem/index";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./ScholarshipList.css";
-import { getDummyData } from "./dummy-data";
 
 function ScholarshipsList() {
-  const hasToken = Boolean(localStorage.getItem("token"));
   const [data, setData] = useState([]);
   const navigate = useNavigate();
 
@@ -22,23 +20,23 @@ function ScholarshipsList() {
         Authorization: `Bearer ${token}`,
       },
     }).then((res) => {
-      setData(res);
+      setData(res.data);
     });
   }, [token]);
-  const dummyData = getDummyData();
 
   return (
     <div className="scholarships-list">
-      {dummyData.map(
+      {data?.beasiswa?.map(
         ({
           id,
           nama: name,
           jenjang_pendidikan: faculty,
           jenis_beasiswa: level,
           lama_program: completionTime,
-          url_gambar: imageUrl
+          url_gambar: imageUrl,
         }) => (
           <ScholarshipsItem
+            onClickScholarship={() => navigate(`/scholarship/${id}`)}
             key={id}
             id={id}
             name={name}

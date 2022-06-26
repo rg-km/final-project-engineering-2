@@ -11,6 +11,12 @@
   line-height: 125%;
 }
 
+.lg-1-bold {
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 125%;
+}
+
 .md-4 {
   font-size: 16px;
   font-weight: 400;
@@ -118,6 +124,10 @@
   color: #1c2560;
 }
 
+.spacing-button {
+  padding-right: 20px;
+}
+
 .button {
   padding: 16px 24px;
   background-color: #1c2560;
@@ -167,6 +177,30 @@
 
 .spacing-text-button {
   padding: 36px 0;
+}
+
+.spacing-header {
+  padding-top: 48px;
+  padding-left: 48px;
+  padding-right: 48px;
+}
+
+.spacing-content {
+  padding-left: 48px;
+}
+
+.justify-center {
+  justify-content: space-between;
+}
+
+.line {
+  border-bottom: 1px solid #131313;
+  margin-bottom: 24px;
+  padding-top: 24px;
+}
+
+.spacing-description {
+  padding: 8px 0;
 }
 
 /*# sourceMappingURL=main.css.map */
