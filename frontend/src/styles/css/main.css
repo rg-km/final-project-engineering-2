@@ -179,6 +179,10 @@
   padding: 36px 0;
 }
 
+.bottom-spacing {
+  padding-bottom: 60px;
+}
+
 .spacing-header {
   padding-top: 48px;
   padding-left: 48px;

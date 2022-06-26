@@ -12,14 +12,14 @@ const Description = () => {
   const [message, setMessage] = useState("");
 
   const token = localStorage.getItem("token");
-  const idSiswa = localStorage.getItem("id_siswa");
 
   const toast = useToast();
 
   useEffect(() => {
     axios({
       method: "get",
-      url: `${ENV.API_URL}/api/beasiswa?id=${id}`,
+      url: `${ENV.API_URL}/api/beasiswa`,
+      params: { id },
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -37,12 +37,12 @@ const Description = () => {
       },
       data: {
         id_beasiswa: parseInt(id),
-        id_siswa: parseInt(idSiswa),
       },
       mode: "cors",
       credentials: "include",
     })
       .then((res) => {
+        setMessage(res?.data?.status);
         if (res)
           toast({
             title: "Daftar Success.",
@@ -61,24 +61,7 @@ const Description = () => {
             duration: 9000,
             isClosable: true,
           });
-        console.log(err);
       });
-  };
-
-  const isApply = () => {
-    axios({
-      method: "post",
-      url: `${ENV.API_URL}/api/pendaftaran/update`,
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-      data: {
-        id_beasiswa: parseInt(id),
-        Status: "Menungggu",
-      },
-      mode: "cors",
-      credentials: "include",
-    }).then((res) => setMessage(res.data.status));
   };
 
   return (
@@ -92,7 +75,7 @@ const Description = () => {
                 <h2 className="xl-4">{item.nama}</h2>
                 <p className="lg-1">{item.program_pendidikan}</p>
               </div>
-              <button className="button" onClick={applyBeasiswa && isApply}>
+              <button className="button" onClick={applyBeasiswa}>
                 {Boolean(message) ? message : "Daftar"}
               </button>
             </div>

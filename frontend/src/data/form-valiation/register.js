@@ -8,6 +8,7 @@ const registerValidation = Yup.object().shape({
   nik: Yup.string().required("NIK Required"),
   tempat_lahir: Yup.string().required("City of Birth required"),
   tanggal_lahir: Yup.string().required("Date of Birth required"),
+  kota_domisili: Yup.string().required("City required"),
 });
 
 export default registerValidation;

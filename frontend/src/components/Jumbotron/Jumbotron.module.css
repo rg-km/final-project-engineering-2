@@ -1,35 +1,35 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Poppins&display=swap");
 
 * {
-    padding: 0;
-    margin: 0;
-    box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
 }
 
 .jumbotron__container {
-    background-image: url("../../../public/images/scholarship_jumbotron.png");
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: top;
-    height: 300px;
-    display: grid;
-    align-items: center;
-    border: 2px solid rgba(0, 0, 0, .2);
+  background-image: url("../../../public/images/scholarship_jumbotron.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: top;
+  height: 300px;
+  display: grid;
+  align-items: center;
+  border: 2px solid rgba(0, 0, 0, 0.2);
 }
 
 .jumbotron__inner {
-    padding: 25px;
-    background-color: rgba(0, 0, 0, .75);
-    text-align: center;
-    color: white;
-    font-family: 'Poppins', sans-serif;
+  padding: 25px;
+  background-color: rgba(0, 0, 0, 0.75);
+  text-align: center;
+  color: white;
+  font-family: "Poppins", sans-serif;
 }
 
-.jumbotron__title{
-    font-size: 3rem;
+.jumbotron__title {
+  font-size: 3rem;
 }
 
-.jumbotron__tagline{
-    font-size: 1.2rem;
-    font-weight: bolder;
+.jumbotron__tagline {
+  font-size: 1.2rem;
+  font-weight: bolder;
 }
