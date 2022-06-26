@@ -129,15 +129,9 @@ func (a *API) createPendaftaran(w http.ResponseWriter, r *http.Request) {
 	if pendaftaran.Status == "" {
 		pendaftaran.Status = "Menunggu Pengumuman"
 	}
-	c, err := r.Cookie("token")
-	if err != nil {
-		w.WriteHeader(http.StatusUnauthorized)
-		return
-	}
-	tokenStr := c.Value
 
-	siswaFromToken, err := a.getSiswaFromToken(tokenStr)
-	idNum, _ := strconv.Atoi(siswaFromToken.Id)
+	SiswaData := r.Context().Value("siswa_data").(Siswa)
+	idNum, _ := strconv.Atoi(SiswaData.Id)
 	if err != nil {
 		w.WriteHeader(http.StatusUnauthorized)
 		return
