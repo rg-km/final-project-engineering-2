@@ -6,6 +6,7 @@ import Register from "./screen/authentication/Register";
 import Footer from "./components/Footer/index";
 import ScholarshipsList from "./components/card/ScholarshipList";
 import Jumbotron from "./components/Jumbotron/Jumbotron";
+import NoMatchRoute from "./components/card/NoMatchRoute";
 import Description from "./screen/Description";
 
 const App = () => {
@@ -25,6 +26,7 @@ const App = () => {
           />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="*" element={<NoMatchRoute />} />
           <Route path="/scholarship/:id" element={<Description />} />
         </Routes>
         <Footer />

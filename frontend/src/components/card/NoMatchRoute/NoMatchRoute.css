@@ -1,0 +1,39 @@
+.no-match-route__container{
+    max-width: 1000px;
+    width: 50%;
+    display: grid;
+    align-items: center;
+    justify-items: center;
+    justify-content: center;
+    margin: 20px auto;
+    grid-template-columns: 500px 300px;
+    grid-auto-flow: column;
+}
+
+img{
+    width: 100%;
+}
+
+.no-match-route__image{
+    display: flex;
+    align-items: center;
+    justify-items: center;
+}
+
+.no-match-route__body{
+    row-gap: 20px;
+}
+
+.no-match-route__message{
+    border-radius: 12px;
+    padding: 20px;
+    font-weight: bold;
+    color: rgba(51, 91, 98, 1);
+}
+
+.no-match-route__button {
+    background-color: rgba(47, 74, 85, 1);
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+}
