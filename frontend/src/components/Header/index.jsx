@@ -24,17 +24,35 @@ const Header = () => {
     });
   }, [token]);
 
-  localStorage.setItem("id_siswa", data?.data?.siswa?.id);
   return (
     <div className="header-container row-flex">
       <h4 className="title md-4-semibold">Raih Beasiswa</h4>
-      <div className="row-flex container">
-        {hasToken && (
-          <p className="spacing-button">{data?.data?.siswa?.nama}</p>
+      <div>
+        {hasToken ? (
+          <>
+            <p style={{
+              fontWeight: "bold"
+            }}>
+              {data?.data?.siswa?.nama}
+              <button
+                className="button"
+                onClick={() => {
+                  localStorage.clear();
+                  return navigate("/login");
+                }}
+                style={{
+                  marginLeft: "50px"
+                }}
+              >
+                Log Out
+              </button>
+            </p>
+          </>
+        ) : (
+          <button className="button" onClick={() => navigate("/login")}>
+            Login
+          </button>
         )}
-        <button className="button" onClick={() => navigate("/login")}>
-          Login
-        </button>
       </div>
     </div>
   );
