@@ -24,17 +24,17 @@ const Header = () => {
     });
   }, [token]);
 
+  localStorage.setItem("id_siswa", data?.data?.siswa?.id);
   return (
     <div className="header-container row-flex">
       <h4 className="title md-4-semibold">Raih Beasiswa</h4>
-      <div>
-        {hasToken ? (
-          <p>{data?.data?.siswa?.nama}</p>
-        ) : (
-          <button className="button" onClick={() => navigate("/login")}>
-            Login
-          </button>
+      <div className="row-flex container">
+        {hasToken && (
+          <p className="spacing-button">{data?.data?.siswa?.nama}</p>
         )}
+        <button className="button" onClick={() => navigate("/login")}>
+          Login
+        </button>
       </div>
     </div>
   );

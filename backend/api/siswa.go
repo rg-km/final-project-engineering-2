@@ -7,8 +7,6 @@ import (
 	"net/http"
 	"strconv"
 	"time"
-
-	"github.com/golang-jwt/jwt/v4"
 )
 
 type SiswaErrorResponse struct {
@@ -23,31 +21,12 @@ type ListSiswa struct {
 	Nama              string `json:"nama"`
 	Email             string `json:"email"`
 	JenjangPendidikan string `json:"jenjang_pendidikan"`
-	Nik 			  string `json:"nik"`
+	Nik               string `json:"nik"`
 	TanggalLahir      string `json:"tanggal_lahir"`
 	TempatLahir       string `json:"tempat_lahir"`
-	KotaDomisili 	  string `json:"kota_domisili"`
+	KotaDomisili      string `json:"kota_domisili"`
 }
 
-func (a *API) getSiswaFromToken(tokenStr string) (*Siswa, error) {
-
-	SiswaClaims := &Claims{}
-
-	token, err := jwt.ParseWithClaims(tokenStr, SiswaClaims, func(token *jwt.Token) (interface{}, error) {
-		return jwtKey, nil
-	})
-
-	if err != nil {
-		return nil, err
-	}
-
-	if !token.Valid {
-		return nil, fmt.Errorf("Token is Invalid")
-	}
-
-	retrivedSiswa := SiswaClaims.SiswaData
-	return &retrivedSiswa, nil
-}
 func (a *API) UpdateSiswa(w http.ResponseWriter, r *http.Request) {
 	var siswaInput Siswa
 
@@ -57,24 +36,8 @@ func (a *API) UpdateSiswa(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	c, err := r.Cookie("token")
-	if err != nil {
-		if err == http.ErrNoCookie {
-			w.WriteHeader(http.StatusUnauthorized)
-			encoder.Encode(AuthErrorResponse{Error: err.Error()})
-			return
-		}
-		w.WriteHeader(http.StatusBadRequest)
-		encoder.Encode(AuthErrorResponse{Error: err.Error()})
-		return
-	}
-	tokenStr := c.Value
-	siswaFromToken, err := a.getSiswaFromToken(tokenStr)
-	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
-	idNum, _ := strconv.Atoi(siswaFromToken.Id)
+	SiswaData := r.Context().Value("siswa_data").(Siswa)
+	idNum, _ := strconv.Atoi(SiswaData.Id)
 	siswaCurrent, err := a.siswaRepo.GetSiswaByID(idNum)
 
 	if err != nil {
@@ -88,7 +51,7 @@ func (a *API) UpdateSiswa(w http.ResponseWriter, r *http.Request) {
 		TanggalLahir:      siswaInput.TanggalLahir,
 		TempatLahir:       siswaInput.TempatLahir,
 		JenjangPendidikan: siswaInput.JenjangPendidikan,
-		Nik: 			   siswaInput.Nik,
+		Nik:               siswaInput.Nik,
 		KotaDomisili:      siswaInput.KotaDomisili,
 	}
 
@@ -127,50 +90,22 @@ func (a *API) UpdateSiswa(w http.ResponseWriter, r *http.Request) {
 func (a *API) GetSiswaByToken(w http.ResponseWriter, r *http.Request) {
 	a.AllowOrigin(w, r)
 	w.Header().Set("Content-Type", "application/json")
-	c, err := r.Cookie("token")
+	SiswaData := r.Context().Value("siswa_data").(Siswa)
 	encoder := json.NewEncoder(w)
 
-	if err != nil {
-		if err == http.ErrNoCookie {
-			w.WriteHeader(http.StatusUnauthorized)
-			encoder.Encode(AuthErrorResponse{Error: err.Error()})
-			return
-		}
-		w.WriteHeader(http.StatusBadRequest)
-		encoder.Encode(AuthErrorResponse{Error: err.Error()})
-		return
-	}
-
-	tokenStr := c.Value
-	retrivedSiswa, err := a.getSiswaFromToken(tokenStr)
-	if err != nil {
-		if err == jwt.ErrSignatureInvalid || err.Error() == "Token is Invalid" {
-			w.WriteHeader(http.StatusUnauthorized)
-			encoder.Encode(AuthErrorResponse{Error: err.Error()})
-			return
-		}
-		w.WriteHeader(http.StatusBadRequest)
-		encoder.Encode(AuthErrorResponse{Error: err.Error()})
-		return
-	}
-
 	expTime := time.Now().Add(60 * time.Minute)
-	newTokenString, err := a.GenerateSiswaToken(*retrivedSiswa, expTime)
+	newTokenString, err := a.GenerateSiswaToken(SiswaData, expTime)
 
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
-	http.SetCookie(w, &http.Cookie{
-		Name:    "token",
-		Value:   newTokenString,
-		Expires: expTime,
-		Path:    "/api",
-	})
-
 	w.WriteHeader(http.StatusOK)
-	encoder.Encode(retrivedSiswa)
+	encoder.Encode(map[string]interface{}{
+		"siswa": SiswaData,
+		"token": newTokenString,
+	})
 	return
 }
 func (a *API) GetAllSiswa(w http.ResponseWriter, r *http.Request) {
@@ -197,7 +132,7 @@ func (a *API) GetAllSiswa(w http.ResponseWriter, r *http.Request) {
 		response.Siswa = append(response.Siswa, ListSiswa{
 			Id:                strconv.Itoa(int(s.Id)),
 			Nama:              s.Nama,
-			Nik: 			   s.Nik,
+			Nik:               s.Nik,
 			Email:             s.Email,
 			TanggalLahir:      s.TanggalLahir,
 			TempatLahir:       s.TempatLahir,
@@ -236,7 +171,7 @@ func (a *API) GetSiswaByID(w http.ResponseWriter, r *http.Request) {
 	response.Siswa = append(response.Siswa, ListSiswa{
 		Id:                strconv.Itoa(int(res.Id)),
 		Nama:              res.Nama,
-		Nik: 			   res.Nik,
+		Nik:               res.Nik,
 		Email:             res.Email,
 		TanggalLahir:      res.TanggalLahir,
 		TempatLahir:       res.TempatLahir,

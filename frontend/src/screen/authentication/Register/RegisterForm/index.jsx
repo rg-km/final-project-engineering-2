@@ -29,6 +29,7 @@ const RegisterForm = () => {
       nik: "",
       tempat_lahir: "",
       tanggal_lahir: "",
+      kota_domisili: "",
     },
   });
 
@@ -101,7 +102,7 @@ const RegisterForm = () => {
               placeholder: "Enter your NIK",
             },
             {
-              label: "City",
+              label: "City of Birth",
               name: "tempat_lahir",
               placeholder: "Enter your City of Birth",
             },
@@ -109,6 +110,11 @@ const RegisterForm = () => {
               label: "Date of Birth",
               name: "tanggal_lahir",
               placeholder: "YYYY-MM-DD",
+            },
+            {
+              label: "City",
+              name: "kota_domisili",
+              placeholder: "Enter your City",
             },
           ]}
           control={control}
