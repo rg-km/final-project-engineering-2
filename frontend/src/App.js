@@ -6,6 +6,7 @@ import Register from "./screen/authentication/Register";
 import Footer from "./components/Footer/index";
 import ScholarshipsList from "./components/card/ScholarshipList";
 import Jumbotron from "./components/Jumbotron/Jumbotron";
+import NoMatchRoute from "./components/card/NoMatchRoute";
 
 const App = () => {
   return (
@@ -24,6 +25,7 @@ const App = () => {
           />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="*" element={<NoMatchRoute />} />
         </Routes>
         <Footer />
       </div>
